@@ -1,0 +1,2077 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    MOD
+    PUB
+    VEC
+    aMUT
+
+Grammar
+
+Rule 0     S' -> init
+Rule 1     init -> instrucciones_g
+Rule 2     instrucciones_g -> instrucciones_g instruccion_g
+Rule 3     instrucciones_g -> instruccion_g
+Rule 4     instruccion_g -> funcion
+Rule 5     instrucciones_l -> instrucciones_l instruccion_l
+Rule 6     instrucciones_l -> instruccion_l
+Rule 7     instruccion_l -> print PCOMA
+Rule 8     instruccion_l -> declaracion PCOMA
+Rule 9     instruccion_l -> asignacion PCOMA
+Rule 10    instruccion_l -> llamada PCOMA
+Rule 11    funcion -> FN ID LPAR lista_parametros RPAR ARROW tipo_var statement
+Rule 12    funcion -> FN ID LPAR lista_parametros RPAR statement
+Rule 13    funcion -> FN ID LPAR RPAR ARROW tipo_var statement
+Rule 14    funcion -> FN ID LPAR RPAR statement
+Rule 15    statement -> LLLAV instrucciones_l RLLAV
+Rule 16    statement -> LLLAV RLLAV
+Rule 17    lista_parametros -> lista_parametros COMA asignacion_simple
+Rule 18    lista_parametros -> asignacion_simple
+Rule 19    declaracion -> LET asignacion_simple IGUAL exp
+Rule 20    declaracion -> LET MUT asignacion
+Rule 21    declaracion -> LET asignacion
+Rule 22    asignacion -> ID IGUAL exp
+Rule 23    asignacion -> ID lista_arr IGUAL exp
+Rule 24    lista_arr -> lista_arr LCOR exp RCOR
+Rule 25    lista_arr -> LCOR exp RCOR
+Rule 26    lista_exp -> lista_exp COMA exp
+Rule 27    lista_exp -> exp
+Rule 28    asignacion_simple -> ID DPUNTOS tipo_var
+Rule 29    asignacion_simple -> ID DPUNTOS lista_arr2
+Rule 30    asignacion_simple -> MUT ID DPUNTOS tipo_var
+Rule 31    asignacion_simple -> MUT ID DPUNTOS lista_arr2
+Rule 32    lista_arr2 -> LCOR lista_arr2 PCOMA exp RCOR
+Rule 33    lista_arr2 -> LCOR tipo_var PCOMA exp RCOR
+Rule 34    exp -> valores
+Rule 35    exp -> LPAR valores LPAR
+Rule 36    exp -> expmath
+Rule 37    exp -> exparr
+Rule 38    exp -> ID
+Rule 39    expmath -> exp MAS exp
+Rule 40    expmath -> exp MENOS exp
+Rule 41    expmath -> exp MULTIPLICACION exp
+Rule 42    expmath -> exp DIVISION exp
+Rule 43    expmath -> MENOS exp
+Rule 44    exparr -> ID lista_arr
+Rule 45    exparr -> LCOR lista_exp RCOR
+Rule 46    exparr -> LCOR exp PCOMA exp RCOR
+Rule 47    valores -> ENTERO
+Rule 48    valores -> DECIMAL
+Rule 49    valores -> CADENA
+Rule 50    print -> PRINT AD LPAR exp RPAR
+Rule 51    llamada -> ID LPAR RPAR
+Rule 52    llamada -> ID LPAR lista_exp RPAR
+Rule 53    tipo_var -> I64
+Rule 54    tipo_var -> F64
+Rule 55    tipo_var -> BOOL
+Rule 56    tipo_var -> CHAR
+Rule 57    tipo_var -> aSTR
+Rule 58    tipo_var -> STRING
+Rule 59    tipo_var -> USIZE
+Rule 60    tipo_var -> ID
+
+Terminals, with rules where they appear
+
+AD                   : 50
+ARROW                : 11 13
+BOOL                 : 55
+CADENA               : 49
+CHAR                 : 56
+COMA                 : 17 26
+DECIMAL              : 48
+DIVISION             : 42
+DPUNTOS              : 28 29 30 31
+ENTERO               : 47
+F64                  : 54
+FN                   : 11 12 13 14
+I64                  : 53
+ID                   : 11 12 13 14 22 23 28 29 30 31 38 44 51 52 60
+IGUAL                : 19 22 23
+LCOR                 : 24 25 32 33 45 46
+LET                  : 19 20 21
+LLLAV                : 15 16
+LPAR                 : 11 12 13 14 35 35 50 51 52
+MAS                  : 39
+MENOS                : 40 43
+MOD                  : 
+MULTIPLICACION       : 41
+MUT                  : 20 30 31
+PCOMA                : 7 8 9 10 32 33 46
+PRINT                : 50
+PUB                  : 
+RCOR                 : 24 25 32 33 45 46
+RLLAV                : 15 16
+RPAR                 : 11 12 13 14 50 51 52
+STRING               : 58
+USIZE                : 59
+VEC                  : 
+aMUT                 : 
+aSTR                 : 57
+error                : 
+
+Nonterminals, with rules where they appear
+
+asignacion           : 9 20 21
+asignacion_simple    : 17 18 19
+declaracion          : 8
+exp                  : 19 22 23 24 25 26 27 32 33 39 39 40 40 41 41 42 42 43 46 46 50
+exparr               : 37
+expmath              : 36
+funcion              : 4
+init                 : 0
+instruccion_g        : 2 3
+instruccion_l        : 5 6
+instrucciones_g      : 1 2
+instrucciones_l      : 5 15
+lista_arr            : 23 24 44
+lista_arr2           : 29 31 32
+lista_exp            : 26 45 52
+lista_parametros     : 11 12 17
+llamada              : 10
+print                : 7
+statement            : 11 12 13 14
+tipo_var             : 11 13 28 30 33
+valores              : 34 35
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . init
+    (1) init -> . instrucciones_g
+    (2) instrucciones_g -> . instrucciones_g instruccion_g
+    (3) instrucciones_g -> . instruccion_g
+    (4) instruccion_g -> . funcion
+    (11) funcion -> . FN ID LPAR lista_parametros RPAR ARROW tipo_var statement
+    (12) funcion -> . FN ID LPAR lista_parametros RPAR statement
+    (13) funcion -> . FN ID LPAR RPAR ARROW tipo_var statement
+    (14) funcion -> . FN ID LPAR RPAR statement
+
+    FN              shift and go to state 5
+
+    init                           shift and go to state 1
+    instrucciones_g                shift and go to state 2
+    instruccion_g                  shift and go to state 3
+    funcion                        shift and go to state 4
+
+state 1
+
+    (0) S' -> init .
+
+
+
+state 2
+
+    (1) init -> instrucciones_g .
+    (2) instrucciones_g -> instrucciones_g . instruccion_g
+    (4) instruccion_g -> . funcion
+    (11) funcion -> . FN ID LPAR lista_parametros RPAR ARROW tipo_var statement
+    (12) funcion -> . FN ID LPAR lista_parametros RPAR statement
+    (13) funcion -> . FN ID LPAR RPAR ARROW tipo_var statement
+    (14) funcion -> . FN ID LPAR RPAR statement
+
+    $end            reduce using rule 1 (init -> instrucciones_g .)
+    FN              shift and go to state 5
+
+    instruccion_g                  shift and go to state 6
+    funcion                        shift and go to state 4
+
+state 3
+
+    (3) instrucciones_g -> instruccion_g .
+
+    FN              reduce using rule 3 (instrucciones_g -> instruccion_g .)
+    $end            reduce using rule 3 (instrucciones_g -> instruccion_g .)
+
+
+state 4
+
+    (4) instruccion_g -> funcion .
+
+    FN              reduce using rule 4 (instruccion_g -> funcion .)
+    $end            reduce using rule 4 (instruccion_g -> funcion .)
+
+
+state 5
+
+    (11) funcion -> FN . ID LPAR lista_parametros RPAR ARROW tipo_var statement
+    (12) funcion -> FN . ID LPAR lista_parametros RPAR statement
+    (13) funcion -> FN . ID LPAR RPAR ARROW tipo_var statement
+    (14) funcion -> FN . ID LPAR RPAR statement
+
+    ID              shift and go to state 7
+
+
+state 6
+
+    (2) instrucciones_g -> instrucciones_g instruccion_g .
+
+    FN              reduce using rule 2 (instrucciones_g -> instrucciones_g instruccion_g .)
+    $end            reduce using rule 2 (instrucciones_g -> instrucciones_g instruccion_g .)
+
+
+state 7
+
+    (11) funcion -> FN ID . LPAR lista_parametros RPAR ARROW tipo_var statement
+    (12) funcion -> FN ID . LPAR lista_parametros RPAR statement
+    (13) funcion -> FN ID . LPAR RPAR ARROW tipo_var statement
+    (14) funcion -> FN ID . LPAR RPAR statement
+
+    LPAR            shift and go to state 8
+
+
+state 8
+
+    (11) funcion -> FN ID LPAR . lista_parametros RPAR ARROW tipo_var statement
+    (12) funcion -> FN ID LPAR . lista_parametros RPAR statement
+    (13) funcion -> FN ID LPAR . RPAR ARROW tipo_var statement
+    (14) funcion -> FN ID LPAR . RPAR statement
+    (17) lista_parametros -> . lista_parametros COMA asignacion_simple
+    (18) lista_parametros -> . asignacion_simple
+    (28) asignacion_simple -> . ID DPUNTOS tipo_var
+    (29) asignacion_simple -> . ID DPUNTOS lista_arr2
+    (30) asignacion_simple -> . MUT ID DPUNTOS tipo_var
+    (31) asignacion_simple -> . MUT ID DPUNTOS lista_arr2
+
+    RPAR            shift and go to state 11
+    ID              shift and go to state 9
+    MUT             shift and go to state 13
+
+    lista_parametros               shift and go to state 10
+    asignacion_simple              shift and go to state 12
+
+state 9
+
+    (28) asignacion_simple -> ID . DPUNTOS tipo_var
+    (29) asignacion_simple -> ID . DPUNTOS lista_arr2
+
+    DPUNTOS         shift and go to state 14
+
+
+state 10
+
+    (11) funcion -> FN ID LPAR lista_parametros . RPAR ARROW tipo_var statement
+    (12) funcion -> FN ID LPAR lista_parametros . RPAR statement
+    (17) lista_parametros -> lista_parametros . COMA asignacion_simple
+
+    RPAR            shift and go to state 15
+    COMA            shift and go to state 16
+
+
+state 11
+
+    (13) funcion -> FN ID LPAR RPAR . ARROW tipo_var statement
+    (14) funcion -> FN ID LPAR RPAR . statement
+    (15) statement -> . LLLAV instrucciones_l RLLAV
+    (16) statement -> . LLLAV RLLAV
+
+    ARROW           shift and go to state 17
+    LLLAV           shift and go to state 19
+
+    statement                      shift and go to state 18
+
+state 12
+
+    (18) lista_parametros -> asignacion_simple .
+
+    RPAR            reduce using rule 18 (lista_parametros -> asignacion_simple .)
+    COMA            reduce using rule 18 (lista_parametros -> asignacion_simple .)
+
+
+state 13
+
+    (30) asignacion_simple -> MUT . ID DPUNTOS tipo_var
+    (31) asignacion_simple -> MUT . ID DPUNTOS lista_arr2
+
+    ID              shift and go to state 20
+
+
+state 14
+
+    (28) asignacion_simple -> ID DPUNTOS . tipo_var
+    (29) asignacion_simple -> ID DPUNTOS . lista_arr2
+    (53) tipo_var -> . I64
+    (54) tipo_var -> . F64
+    (55) tipo_var -> . BOOL
+    (56) tipo_var -> . CHAR
+    (57) tipo_var -> . aSTR
+    (58) tipo_var -> . STRING
+    (59) tipo_var -> . USIZE
+    (60) tipo_var -> . ID
+    (32) lista_arr2 -> . LCOR lista_arr2 PCOMA exp RCOR
+    (33) lista_arr2 -> . LCOR tipo_var PCOMA exp RCOR
+
+    I64             shift and go to state 24
+    F64             shift and go to state 25
+    BOOL            shift and go to state 26
+    CHAR            shift and go to state 27
+    aSTR            shift and go to state 28
+    STRING          shift and go to state 29
+    USIZE           shift and go to state 30
+    ID              shift and go to state 21
+    LCOR            shift and go to state 31
+
+    tipo_var                       shift and go to state 22
+    lista_arr2                     shift and go to state 23
+
+state 15
+
+    (11) funcion -> FN ID LPAR lista_parametros RPAR . ARROW tipo_var statement
+    (12) funcion -> FN ID LPAR lista_parametros RPAR . statement
+    (15) statement -> . LLLAV instrucciones_l RLLAV
+    (16) statement -> . LLLAV RLLAV
+
+    ARROW           shift and go to state 32
+    LLLAV           shift and go to state 19
+
+    statement                      shift and go to state 33
+
+state 16
+
+    (17) lista_parametros -> lista_parametros COMA . asignacion_simple
+    (28) asignacion_simple -> . ID DPUNTOS tipo_var
+    (29) asignacion_simple -> . ID DPUNTOS lista_arr2
+    (30) asignacion_simple -> . MUT ID DPUNTOS tipo_var
+    (31) asignacion_simple -> . MUT ID DPUNTOS lista_arr2
+
+    ID              shift and go to state 9
+    MUT             shift and go to state 13
+
+    asignacion_simple              shift and go to state 34
+
+state 17
+
+    (13) funcion -> FN ID LPAR RPAR ARROW . tipo_var statement
+    (53) tipo_var -> . I64
+    (54) tipo_var -> . F64
+    (55) tipo_var -> . BOOL
+    (56) tipo_var -> . CHAR
+    (57) tipo_var -> . aSTR
+    (58) tipo_var -> . STRING
+    (59) tipo_var -> . USIZE
+    (60) tipo_var -> . ID
+
+    I64             shift and go to state 24
+    F64             shift and go to state 25
+    BOOL            shift and go to state 26
+    CHAR            shift and go to state 27
+    aSTR            shift and go to state 28
+    STRING          shift and go to state 29
+    USIZE           shift and go to state 30
+    ID              shift and go to state 21
+
+    tipo_var                       shift and go to state 35
+
+state 18
+
+    (14) funcion -> FN ID LPAR RPAR statement .
+
+    FN              reduce using rule 14 (funcion -> FN ID LPAR RPAR statement .)
+    $end            reduce using rule 14 (funcion -> FN ID LPAR RPAR statement .)
+
+
+state 19
+
+    (15) statement -> LLLAV . instrucciones_l RLLAV
+    (16) statement -> LLLAV . RLLAV
+    (5) instrucciones_l -> . instrucciones_l instruccion_l
+    (6) instrucciones_l -> . instruccion_l
+    (7) instruccion_l -> . print PCOMA
+    (8) instruccion_l -> . declaracion PCOMA
+    (9) instruccion_l -> . asignacion PCOMA
+    (10) instruccion_l -> . llamada PCOMA
+    (50) print -> . PRINT AD LPAR exp RPAR
+    (19) declaracion -> . LET asignacion_simple IGUAL exp
+    (20) declaracion -> . LET MUT asignacion
+    (21) declaracion -> . LET asignacion
+    (22) asignacion -> . ID IGUAL exp
+    (23) asignacion -> . ID lista_arr IGUAL exp
+    (51) llamada -> . ID LPAR RPAR
+    (52) llamada -> . ID LPAR lista_exp RPAR
+
+    RLLAV           shift and go to state 37
+    PRINT           shift and go to state 43
+    LET             shift and go to state 44
+    ID              shift and go to state 45
+
+    instrucciones_l                shift and go to state 36
+    instruccion_l                  shift and go to state 38
+    print                          shift and go to state 39
+    declaracion                    shift and go to state 40
+    asignacion                     shift and go to state 41
+    llamada                        shift and go to state 42
+
+state 20
+
+    (30) asignacion_simple -> MUT ID . DPUNTOS tipo_var
+    (31) asignacion_simple -> MUT ID . DPUNTOS lista_arr2
+
+    DPUNTOS         shift and go to state 46
+
+
+state 21
+
+    (60) tipo_var -> ID .
+
+    RPAR            reduce using rule 60 (tipo_var -> ID .)
+    COMA            reduce using rule 60 (tipo_var -> ID .)
+    IGUAL           reduce using rule 60 (tipo_var -> ID .)
+    LLLAV           reduce using rule 60 (tipo_var -> ID .)
+    PCOMA           reduce using rule 60 (tipo_var -> ID .)
+
+
+state 22
+
+    (28) asignacion_simple -> ID DPUNTOS tipo_var .
+
+    RPAR            reduce using rule 28 (asignacion_simple -> ID DPUNTOS tipo_var .)
+    COMA            reduce using rule 28 (asignacion_simple -> ID DPUNTOS tipo_var .)
+    IGUAL           reduce using rule 28 (asignacion_simple -> ID DPUNTOS tipo_var .)
+
+
+state 23
+
+    (29) asignacion_simple -> ID DPUNTOS lista_arr2 .
+
+    RPAR            reduce using rule 29 (asignacion_simple -> ID DPUNTOS lista_arr2 .)
+    COMA            reduce using rule 29 (asignacion_simple -> ID DPUNTOS lista_arr2 .)
+    IGUAL           reduce using rule 29 (asignacion_simple -> ID DPUNTOS lista_arr2 .)
+
+
+state 24
+
+    (53) tipo_var -> I64 .
+
+    RPAR            reduce using rule 53 (tipo_var -> I64 .)
+    COMA            reduce using rule 53 (tipo_var -> I64 .)
+    IGUAL           reduce using rule 53 (tipo_var -> I64 .)
+    LLLAV           reduce using rule 53 (tipo_var -> I64 .)
+    PCOMA           reduce using rule 53 (tipo_var -> I64 .)
+
+
+state 25
+
+    (54) tipo_var -> F64 .
+
+    RPAR            reduce using rule 54 (tipo_var -> F64 .)
+    COMA            reduce using rule 54 (tipo_var -> F64 .)
+    IGUAL           reduce using rule 54 (tipo_var -> F64 .)
+    LLLAV           reduce using rule 54 (tipo_var -> F64 .)
+    PCOMA           reduce using rule 54 (tipo_var -> F64 .)
+
+
+state 26
+
+    (55) tipo_var -> BOOL .
+
+    RPAR            reduce using rule 55 (tipo_var -> BOOL .)
+    COMA            reduce using rule 55 (tipo_var -> BOOL .)
+    IGUAL           reduce using rule 55 (tipo_var -> BOOL .)
+    LLLAV           reduce using rule 55 (tipo_var -> BOOL .)
+    PCOMA           reduce using rule 55 (tipo_var -> BOOL .)
+
+
+state 27
+
+    (56) tipo_var -> CHAR .
+
+    RPAR            reduce using rule 56 (tipo_var -> CHAR .)
+    COMA            reduce using rule 56 (tipo_var -> CHAR .)
+    IGUAL           reduce using rule 56 (tipo_var -> CHAR .)
+    LLLAV           reduce using rule 56 (tipo_var -> CHAR .)
+    PCOMA           reduce using rule 56 (tipo_var -> CHAR .)
+
+
+state 28
+
+    (57) tipo_var -> aSTR .
+
+    RPAR            reduce using rule 57 (tipo_var -> aSTR .)
+    COMA            reduce using rule 57 (tipo_var -> aSTR .)
+    IGUAL           reduce using rule 57 (tipo_var -> aSTR .)
+    LLLAV           reduce using rule 57 (tipo_var -> aSTR .)
+    PCOMA           reduce using rule 57 (tipo_var -> aSTR .)
+
+
+state 29
+
+    (58) tipo_var -> STRING .
+
+    RPAR            reduce using rule 58 (tipo_var -> STRING .)
+    COMA            reduce using rule 58 (tipo_var -> STRING .)
+    IGUAL           reduce using rule 58 (tipo_var -> STRING .)
+    LLLAV           reduce using rule 58 (tipo_var -> STRING .)
+    PCOMA           reduce using rule 58 (tipo_var -> STRING .)
+
+
+state 30
+
+    (59) tipo_var -> USIZE .
+
+    RPAR            reduce using rule 59 (tipo_var -> USIZE .)
+    COMA            reduce using rule 59 (tipo_var -> USIZE .)
+    IGUAL           reduce using rule 59 (tipo_var -> USIZE .)
+    LLLAV           reduce using rule 59 (tipo_var -> USIZE .)
+    PCOMA           reduce using rule 59 (tipo_var -> USIZE .)
+
+
+state 31
+
+    (32) lista_arr2 -> LCOR . lista_arr2 PCOMA exp RCOR
+    (33) lista_arr2 -> LCOR . tipo_var PCOMA exp RCOR
+    (32) lista_arr2 -> . LCOR lista_arr2 PCOMA exp RCOR
+    (33) lista_arr2 -> . LCOR tipo_var PCOMA exp RCOR
+    (53) tipo_var -> . I64
+    (54) tipo_var -> . F64
+    (55) tipo_var -> . BOOL
+    (56) tipo_var -> . CHAR
+    (57) tipo_var -> . aSTR
+    (58) tipo_var -> . STRING
+    (59) tipo_var -> . USIZE
+    (60) tipo_var -> . ID
+
+    LCOR            shift and go to state 31
+    I64             shift and go to state 24
+    F64             shift and go to state 25
+    BOOL            shift and go to state 26
+    CHAR            shift and go to state 27
+    aSTR            shift and go to state 28
+    STRING          shift and go to state 29
+    USIZE           shift and go to state 30
+    ID              shift and go to state 21
+
+    lista_arr2                     shift and go to state 47
+    tipo_var                       shift and go to state 48
+
+state 32
+
+    (11) funcion -> FN ID LPAR lista_parametros RPAR ARROW . tipo_var statement
+    (53) tipo_var -> . I64
+    (54) tipo_var -> . F64
+    (55) tipo_var -> . BOOL
+    (56) tipo_var -> . CHAR
+    (57) tipo_var -> . aSTR
+    (58) tipo_var -> . STRING
+    (59) tipo_var -> . USIZE
+    (60) tipo_var -> . ID
+
+    I64             shift and go to state 24
+    F64             shift and go to state 25
+    BOOL            shift and go to state 26
+    CHAR            shift and go to state 27
+    aSTR            shift and go to state 28
+    STRING          shift and go to state 29
+    USIZE           shift and go to state 30
+    ID              shift and go to state 21
+
+    tipo_var                       shift and go to state 49
+
+state 33
+
+    (12) funcion -> FN ID LPAR lista_parametros RPAR statement .
+
+    FN              reduce using rule 12 (funcion -> FN ID LPAR lista_parametros RPAR statement .)
+    $end            reduce using rule 12 (funcion -> FN ID LPAR lista_parametros RPAR statement .)
+
+
+state 34
+
+    (17) lista_parametros -> lista_parametros COMA asignacion_simple .
+
+    RPAR            reduce using rule 17 (lista_parametros -> lista_parametros COMA asignacion_simple .)
+    COMA            reduce using rule 17 (lista_parametros -> lista_parametros COMA asignacion_simple .)
+
+
+state 35
+
+    (13) funcion -> FN ID LPAR RPAR ARROW tipo_var . statement
+    (15) statement -> . LLLAV instrucciones_l RLLAV
+    (16) statement -> . LLLAV RLLAV
+
+    LLLAV           shift and go to state 19
+
+    statement                      shift and go to state 50
+
+state 36
+
+    (15) statement -> LLLAV instrucciones_l . RLLAV
+    (5) instrucciones_l -> instrucciones_l . instruccion_l
+    (7) instruccion_l -> . print PCOMA
+    (8) instruccion_l -> . declaracion PCOMA
+    (9) instruccion_l -> . asignacion PCOMA
+    (10) instruccion_l -> . llamada PCOMA
+    (50) print -> . PRINT AD LPAR exp RPAR
+    (19) declaracion -> . LET asignacion_simple IGUAL exp
+    (20) declaracion -> . LET MUT asignacion
+    (21) declaracion -> . LET asignacion
+    (22) asignacion -> . ID IGUAL exp
+    (23) asignacion -> . ID lista_arr IGUAL exp
+    (51) llamada -> . ID LPAR RPAR
+    (52) llamada -> . ID LPAR lista_exp RPAR
+
+    RLLAV           shift and go to state 51
+    PRINT           shift and go to state 43
+    LET             shift and go to state 44
+    ID              shift and go to state 45
+
+    instruccion_l                  shift and go to state 52
+    print                          shift and go to state 39
+    declaracion                    shift and go to state 40
+    asignacion                     shift and go to state 41
+    llamada                        shift and go to state 42
+
+state 37
+
+    (16) statement -> LLLAV RLLAV .
+
+    FN              reduce using rule 16 (statement -> LLLAV RLLAV .)
+    $end            reduce using rule 16 (statement -> LLLAV RLLAV .)
+
+
+state 38
+
+    (6) instrucciones_l -> instruccion_l .
+
+    RLLAV           reduce using rule 6 (instrucciones_l -> instruccion_l .)
+    PRINT           reduce using rule 6 (instrucciones_l -> instruccion_l .)
+    LET             reduce using rule 6 (instrucciones_l -> instruccion_l .)
+    ID              reduce using rule 6 (instrucciones_l -> instruccion_l .)
+
+
+state 39
+
+    (7) instruccion_l -> print . PCOMA
+
+    PCOMA           shift and go to state 53
+
+
+state 40
+
+    (8) instruccion_l -> declaracion . PCOMA
+
+    PCOMA           shift and go to state 54
+
+
+state 41
+
+    (9) instruccion_l -> asignacion . PCOMA
+
+    PCOMA           shift and go to state 55
+
+
+state 42
+
+    (10) instruccion_l -> llamada . PCOMA
+
+    PCOMA           shift and go to state 56
+
+
+state 43
+
+    (50) print -> PRINT . AD LPAR exp RPAR
+
+    AD              shift and go to state 57
+
+
+state 44
+
+    (19) declaracion -> LET . asignacion_simple IGUAL exp
+    (20) declaracion -> LET . MUT asignacion
+    (21) declaracion -> LET . asignacion
+    (28) asignacion_simple -> . ID DPUNTOS tipo_var
+    (29) asignacion_simple -> . ID DPUNTOS lista_arr2
+    (30) asignacion_simple -> . MUT ID DPUNTOS tipo_var
+    (31) asignacion_simple -> . MUT ID DPUNTOS lista_arr2
+    (22) asignacion -> . ID IGUAL exp
+    (23) asignacion -> . ID lista_arr IGUAL exp
+
+    MUT             shift and go to state 59
+    ID              shift and go to state 61
+
+    asignacion_simple              shift and go to state 58
+    asignacion                     shift and go to state 60
+
+state 45
+
+    (22) asignacion -> ID . IGUAL exp
+    (23) asignacion -> ID . lista_arr IGUAL exp
+    (51) llamada -> ID . LPAR RPAR
+    (52) llamada -> ID . LPAR lista_exp RPAR
+    (24) lista_arr -> . lista_arr LCOR exp RCOR
+    (25) lista_arr -> . LCOR exp RCOR
+
+    IGUAL           shift and go to state 62
+    LPAR            shift and go to state 64
+    LCOR            shift and go to state 65
+
+    lista_arr                      shift and go to state 63
+
+state 46
+
+    (30) asignacion_simple -> MUT ID DPUNTOS . tipo_var
+    (31) asignacion_simple -> MUT ID DPUNTOS . lista_arr2
+    (53) tipo_var -> . I64
+    (54) tipo_var -> . F64
+    (55) tipo_var -> . BOOL
+    (56) tipo_var -> . CHAR
+    (57) tipo_var -> . aSTR
+    (58) tipo_var -> . STRING
+    (59) tipo_var -> . USIZE
+    (60) tipo_var -> . ID
+    (32) lista_arr2 -> . LCOR lista_arr2 PCOMA exp RCOR
+    (33) lista_arr2 -> . LCOR tipo_var PCOMA exp RCOR
+
+    I64             shift and go to state 24
+    F64             shift and go to state 25
+    BOOL            shift and go to state 26
+    CHAR            shift and go to state 27
+    aSTR            shift and go to state 28
+    STRING          shift and go to state 29
+    USIZE           shift and go to state 30
+    ID              shift and go to state 21
+    LCOR            shift and go to state 31
+
+    tipo_var                       shift and go to state 66
+    lista_arr2                     shift and go to state 67
+
+state 47
+
+    (32) lista_arr2 -> LCOR lista_arr2 . PCOMA exp RCOR
+
+    PCOMA           shift and go to state 68
+
+
+state 48
+
+    (33) lista_arr2 -> LCOR tipo_var . PCOMA exp RCOR
+
+    PCOMA           shift and go to state 69
+
+
+state 49
+
+    (11) funcion -> FN ID LPAR lista_parametros RPAR ARROW tipo_var . statement
+    (15) statement -> . LLLAV instrucciones_l RLLAV
+    (16) statement -> . LLLAV RLLAV
+
+    LLLAV           shift and go to state 19
+
+    statement                      shift and go to state 70
+
+state 50
+
+    (13) funcion -> FN ID LPAR RPAR ARROW tipo_var statement .
+
+    FN              reduce using rule 13 (funcion -> FN ID LPAR RPAR ARROW tipo_var statement .)
+    $end            reduce using rule 13 (funcion -> FN ID LPAR RPAR ARROW tipo_var statement .)
+
+
+state 51
+
+    (15) statement -> LLLAV instrucciones_l RLLAV .
+
+    FN              reduce using rule 15 (statement -> LLLAV instrucciones_l RLLAV .)
+    $end            reduce using rule 15 (statement -> LLLAV instrucciones_l RLLAV .)
+
+
+state 52
+
+    (5) instrucciones_l -> instrucciones_l instruccion_l .
+
+    RLLAV           reduce using rule 5 (instrucciones_l -> instrucciones_l instruccion_l .)
+    PRINT           reduce using rule 5 (instrucciones_l -> instrucciones_l instruccion_l .)
+    LET             reduce using rule 5 (instrucciones_l -> instrucciones_l instruccion_l .)
+    ID              reduce using rule 5 (instrucciones_l -> instrucciones_l instruccion_l .)
+
+
+state 53
+
+    (7) instruccion_l -> print PCOMA .
+
+    RLLAV           reduce using rule 7 (instruccion_l -> print PCOMA .)
+    PRINT           reduce using rule 7 (instruccion_l -> print PCOMA .)
+    LET             reduce using rule 7 (instruccion_l -> print PCOMA .)
+    ID              reduce using rule 7 (instruccion_l -> print PCOMA .)
+
+
+state 54
+
+    (8) instruccion_l -> declaracion PCOMA .
+
+    RLLAV           reduce using rule 8 (instruccion_l -> declaracion PCOMA .)
+    PRINT           reduce using rule 8 (instruccion_l -> declaracion PCOMA .)
+    LET             reduce using rule 8 (instruccion_l -> declaracion PCOMA .)
+    ID              reduce using rule 8 (instruccion_l -> declaracion PCOMA .)
+
+
+state 55
+
+    (9) instruccion_l -> asignacion PCOMA .
+
+    RLLAV           reduce using rule 9 (instruccion_l -> asignacion PCOMA .)
+    PRINT           reduce using rule 9 (instruccion_l -> asignacion PCOMA .)
+    LET             reduce using rule 9 (instruccion_l -> asignacion PCOMA .)
+    ID              reduce using rule 9 (instruccion_l -> asignacion PCOMA .)
+
+
+state 56
+
+    (10) instruccion_l -> llamada PCOMA .
+
+    RLLAV           reduce using rule 10 (instruccion_l -> llamada PCOMA .)
+    PRINT           reduce using rule 10 (instruccion_l -> llamada PCOMA .)
+    LET             reduce using rule 10 (instruccion_l -> llamada PCOMA .)
+    ID              reduce using rule 10 (instruccion_l -> llamada PCOMA .)
+
+
+state 57
+
+    (50) print -> PRINT AD . LPAR exp RPAR
+
+    LPAR            shift and go to state 71
+
+
+state 58
+
+    (19) declaracion -> LET asignacion_simple . IGUAL exp
+
+    IGUAL           shift and go to state 72
+
+
+state 59
+
+    (20) declaracion -> LET MUT . asignacion
+    (30) asignacion_simple -> MUT . ID DPUNTOS tipo_var
+    (31) asignacion_simple -> MUT . ID DPUNTOS lista_arr2
+    (22) asignacion -> . ID IGUAL exp
+    (23) asignacion -> . ID lista_arr IGUAL exp
+
+    ID              shift and go to state 74
+
+    asignacion                     shift and go to state 73
+
+state 60
+
+    (21) declaracion -> LET asignacion .
+
+    PCOMA           reduce using rule 21 (declaracion -> LET asignacion .)
+
+
+state 61
+
+    (28) asignacion_simple -> ID . DPUNTOS tipo_var
+    (29) asignacion_simple -> ID . DPUNTOS lista_arr2
+    (22) asignacion -> ID . IGUAL exp
+    (23) asignacion -> ID . lista_arr IGUAL exp
+    (24) lista_arr -> . lista_arr LCOR exp RCOR
+    (25) lista_arr -> . LCOR exp RCOR
+
+    DPUNTOS         shift and go to state 14
+    IGUAL           shift and go to state 62
+    LCOR            shift and go to state 65
+
+    lista_arr                      shift and go to state 63
+
+state 62
+
+    (22) asignacion -> ID IGUAL . exp
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 76
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 63
+
+    (23) asignacion -> ID lista_arr . IGUAL exp
+    (24) lista_arr -> lista_arr . LCOR exp RCOR
+
+    IGUAL           shift and go to state 86
+    LCOR            shift and go to state 87
+
+
+state 64
+
+    (51) llamada -> ID LPAR . RPAR
+    (52) llamada -> ID LPAR . lista_exp RPAR
+    (26) lista_exp -> . lista_exp COMA exp
+    (27) lista_exp -> . exp
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    RPAR            shift and go to state 88
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    lista_exp                      shift and go to state 89
+    exp                            shift and go to state 90
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 65
+
+    (25) lista_arr -> LCOR . exp RCOR
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 91
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 66
+
+    (30) asignacion_simple -> MUT ID DPUNTOS tipo_var .
+
+    RPAR            reduce using rule 30 (asignacion_simple -> MUT ID DPUNTOS tipo_var .)
+    COMA            reduce using rule 30 (asignacion_simple -> MUT ID DPUNTOS tipo_var .)
+    IGUAL           reduce using rule 30 (asignacion_simple -> MUT ID DPUNTOS tipo_var .)
+
+
+state 67
+
+    (31) asignacion_simple -> MUT ID DPUNTOS lista_arr2 .
+
+    RPAR            reduce using rule 31 (asignacion_simple -> MUT ID DPUNTOS lista_arr2 .)
+    COMA            reduce using rule 31 (asignacion_simple -> MUT ID DPUNTOS lista_arr2 .)
+    IGUAL           reduce using rule 31 (asignacion_simple -> MUT ID DPUNTOS lista_arr2 .)
+
+
+state 68
+
+    (32) lista_arr2 -> LCOR lista_arr2 PCOMA . exp RCOR
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 92
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 69
+
+    (33) lista_arr2 -> LCOR tipo_var PCOMA . exp RCOR
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 93
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 70
+
+    (11) funcion -> FN ID LPAR lista_parametros RPAR ARROW tipo_var statement .
+
+    FN              reduce using rule 11 (funcion -> FN ID LPAR lista_parametros RPAR ARROW tipo_var statement .)
+    $end            reduce using rule 11 (funcion -> FN ID LPAR lista_parametros RPAR ARROW tipo_var statement .)
+
+
+state 71
+
+    (50) print -> PRINT AD LPAR . exp RPAR
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 94
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 72
+
+    (19) declaracion -> LET asignacion_simple IGUAL . exp
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 95
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 73
+
+    (20) declaracion -> LET MUT asignacion .
+
+    PCOMA           reduce using rule 20 (declaracion -> LET MUT asignacion .)
+
+
+state 74
+
+    (30) asignacion_simple -> MUT ID . DPUNTOS tipo_var
+    (31) asignacion_simple -> MUT ID . DPUNTOS lista_arr2
+    (22) asignacion -> ID . IGUAL exp
+    (23) asignacion -> ID . lista_arr IGUAL exp
+    (24) lista_arr -> . lista_arr LCOR exp RCOR
+    (25) lista_arr -> . LCOR exp RCOR
+
+    DPUNTOS         shift and go to state 46
+    IGUAL           shift and go to state 62
+    LCOR            shift and go to state 65
+
+    lista_arr                      shift and go to state 63
+
+state 75
+
+    (38) exp -> ID .
+    (44) exparr -> ID . lista_arr
+    (24) lista_arr -> . lista_arr LCOR exp RCOR
+    (25) lista_arr -> . LCOR exp RCOR
+
+    MAS             reduce using rule 38 (exp -> ID .)
+    MENOS           reduce using rule 38 (exp -> ID .)
+    MULTIPLICACION  reduce using rule 38 (exp -> ID .)
+    DIVISION        reduce using rule 38 (exp -> ID .)
+    PCOMA           reduce using rule 38 (exp -> ID .)
+    RPAR            reduce using rule 38 (exp -> ID .)
+    COMA            reduce using rule 38 (exp -> ID .)
+    RCOR            reduce using rule 38 (exp -> ID .)
+    LCOR            shift and go to state 65
+
+    lista_arr                      shift and go to state 96
+
+state 76
+
+    (22) asignacion -> ID IGUAL exp .
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    PCOMA           reduce using rule 22 (asignacion -> ID IGUAL exp .)
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 77
+
+    (34) exp -> valores .
+
+    MAS             reduce using rule 34 (exp -> valores .)
+    MENOS           reduce using rule 34 (exp -> valores .)
+    MULTIPLICACION  reduce using rule 34 (exp -> valores .)
+    DIVISION        reduce using rule 34 (exp -> valores .)
+    PCOMA           reduce using rule 34 (exp -> valores .)
+    RPAR            reduce using rule 34 (exp -> valores .)
+    COMA            reduce using rule 34 (exp -> valores .)
+    RCOR            reduce using rule 34 (exp -> valores .)
+
+
+state 78
+
+    (35) exp -> LPAR . valores LPAR
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+
+    valores                        shift and go to state 101
+
+state 79
+
+    (36) exp -> expmath .
+
+    MAS             reduce using rule 36 (exp -> expmath .)
+    MENOS           reduce using rule 36 (exp -> expmath .)
+    MULTIPLICACION  reduce using rule 36 (exp -> expmath .)
+    DIVISION        reduce using rule 36 (exp -> expmath .)
+    PCOMA           reduce using rule 36 (exp -> expmath .)
+    RPAR            reduce using rule 36 (exp -> expmath .)
+    COMA            reduce using rule 36 (exp -> expmath .)
+    RCOR            reduce using rule 36 (exp -> expmath .)
+
+
+state 80
+
+    (37) exp -> exparr .
+
+    MAS             reduce using rule 37 (exp -> exparr .)
+    MENOS           reduce using rule 37 (exp -> exparr .)
+    MULTIPLICACION  reduce using rule 37 (exp -> exparr .)
+    DIVISION        reduce using rule 37 (exp -> exparr .)
+    PCOMA           reduce using rule 37 (exp -> exparr .)
+    RPAR            reduce using rule 37 (exp -> exparr .)
+    COMA            reduce using rule 37 (exp -> exparr .)
+    RCOR            reduce using rule 37 (exp -> exparr .)
+
+
+state 81
+
+    (47) valores -> ENTERO .
+
+    MAS             reduce using rule 47 (valores -> ENTERO .)
+    MENOS           reduce using rule 47 (valores -> ENTERO .)
+    MULTIPLICACION  reduce using rule 47 (valores -> ENTERO .)
+    DIVISION        reduce using rule 47 (valores -> ENTERO .)
+    PCOMA           reduce using rule 47 (valores -> ENTERO .)
+    RPAR            reduce using rule 47 (valores -> ENTERO .)
+    COMA            reduce using rule 47 (valores -> ENTERO .)
+    RCOR            reduce using rule 47 (valores -> ENTERO .)
+    LPAR            reduce using rule 47 (valores -> ENTERO .)
+
+
+state 82
+
+    (48) valores -> DECIMAL .
+
+    MAS             reduce using rule 48 (valores -> DECIMAL .)
+    MENOS           reduce using rule 48 (valores -> DECIMAL .)
+    MULTIPLICACION  reduce using rule 48 (valores -> DECIMAL .)
+    DIVISION        reduce using rule 48 (valores -> DECIMAL .)
+    PCOMA           reduce using rule 48 (valores -> DECIMAL .)
+    RPAR            reduce using rule 48 (valores -> DECIMAL .)
+    COMA            reduce using rule 48 (valores -> DECIMAL .)
+    RCOR            reduce using rule 48 (valores -> DECIMAL .)
+    LPAR            reduce using rule 48 (valores -> DECIMAL .)
+
+
+state 83
+
+    (49) valores -> CADENA .
+
+    MAS             reduce using rule 49 (valores -> CADENA .)
+    MENOS           reduce using rule 49 (valores -> CADENA .)
+    MULTIPLICACION  reduce using rule 49 (valores -> CADENA .)
+    DIVISION        reduce using rule 49 (valores -> CADENA .)
+    PCOMA           reduce using rule 49 (valores -> CADENA .)
+    RPAR            reduce using rule 49 (valores -> CADENA .)
+    COMA            reduce using rule 49 (valores -> CADENA .)
+    RCOR            reduce using rule 49 (valores -> CADENA .)
+    LPAR            reduce using rule 49 (valores -> CADENA .)
+
+
+state 84
+
+    (43) expmath -> MENOS . exp
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 102
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 85
+
+    (45) exparr -> LCOR . lista_exp RCOR
+    (46) exparr -> LCOR . exp PCOMA exp RCOR
+    (26) lista_exp -> . lista_exp COMA exp
+    (27) lista_exp -> . exp
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    lista_exp                      shift and go to state 103
+    exp                            shift and go to state 104
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 86
+
+    (23) asignacion -> ID lista_arr IGUAL . exp
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 105
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 87
+
+    (24) lista_arr -> lista_arr LCOR . exp RCOR
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 106
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 88
+
+    (51) llamada -> ID LPAR RPAR .
+
+    PCOMA           reduce using rule 51 (llamada -> ID LPAR RPAR .)
+
+
+state 89
+
+    (52) llamada -> ID LPAR lista_exp . RPAR
+    (26) lista_exp -> lista_exp . COMA exp
+
+    RPAR            shift and go to state 107
+    COMA            shift and go to state 108
+
+
+state 90
+
+    (27) lista_exp -> exp .
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    RPAR            reduce using rule 27 (lista_exp -> exp .)
+    COMA            reduce using rule 27 (lista_exp -> exp .)
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 91
+
+    (25) lista_arr -> LCOR exp . RCOR
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    RCOR            shift and go to state 109
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 92
+
+    (32) lista_arr2 -> LCOR lista_arr2 PCOMA exp . RCOR
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    RCOR            shift and go to state 110
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 93
+
+    (33) lista_arr2 -> LCOR tipo_var PCOMA exp . RCOR
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    RCOR            shift and go to state 111
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 94
+
+    (50) print -> PRINT AD LPAR exp . RPAR
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    RPAR            shift and go to state 112
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 95
+
+    (19) declaracion -> LET asignacion_simple IGUAL exp .
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    PCOMA           reduce using rule 19 (declaracion -> LET asignacion_simple IGUAL exp .)
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 96
+
+    (44) exparr -> ID lista_arr .
+    (24) lista_arr -> lista_arr . LCOR exp RCOR
+
+    MAS             reduce using rule 44 (exparr -> ID lista_arr .)
+    MENOS           reduce using rule 44 (exparr -> ID lista_arr .)
+    MULTIPLICACION  reduce using rule 44 (exparr -> ID lista_arr .)
+    DIVISION        reduce using rule 44 (exparr -> ID lista_arr .)
+    PCOMA           reduce using rule 44 (exparr -> ID lista_arr .)
+    RPAR            reduce using rule 44 (exparr -> ID lista_arr .)
+    COMA            reduce using rule 44 (exparr -> ID lista_arr .)
+    RCOR            reduce using rule 44 (exparr -> ID lista_arr .)
+    LCOR            shift and go to state 87
+
+
+state 97
+
+    (39) expmath -> exp MAS . exp
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 113
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 98
+
+    (40) expmath -> exp MENOS . exp
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 114
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 99
+
+    (41) expmath -> exp MULTIPLICACION . exp
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 115
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 100
+
+    (42) expmath -> exp DIVISION . exp
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 116
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 101
+
+    (35) exp -> LPAR valores . LPAR
+
+    LPAR            shift and go to state 117
+
+
+state 102
+
+    (43) expmath -> MENOS exp .
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    MAS             reduce using rule 43 (expmath -> MENOS exp .)
+    MENOS           reduce using rule 43 (expmath -> MENOS exp .)
+    MULTIPLICACION  reduce using rule 43 (expmath -> MENOS exp .)
+    DIVISION        reduce using rule 43 (expmath -> MENOS exp .)
+    PCOMA           reduce using rule 43 (expmath -> MENOS exp .)
+    RPAR            reduce using rule 43 (expmath -> MENOS exp .)
+    COMA            reduce using rule 43 (expmath -> MENOS exp .)
+    RCOR            reduce using rule 43 (expmath -> MENOS exp .)
+
+  ! MAS             [ shift and go to state 97 ]
+  ! MENOS           [ shift and go to state 98 ]
+  ! MULTIPLICACION  [ shift and go to state 99 ]
+  ! DIVISION        [ shift and go to state 100 ]
+
+
+state 103
+
+    (45) exparr -> LCOR lista_exp . RCOR
+    (26) lista_exp -> lista_exp . COMA exp
+
+    RCOR            shift and go to state 118
+    COMA            shift and go to state 108
+
+
+state 104
+
+    (46) exparr -> LCOR exp . PCOMA exp RCOR
+    (27) lista_exp -> exp .
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    PCOMA           shift and go to state 119
+    RCOR            reduce using rule 27 (lista_exp -> exp .)
+    COMA            reduce using rule 27 (lista_exp -> exp .)
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 105
+
+    (23) asignacion -> ID lista_arr IGUAL exp .
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    PCOMA           reduce using rule 23 (asignacion -> ID lista_arr IGUAL exp .)
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 106
+
+    (24) lista_arr -> lista_arr LCOR exp . RCOR
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    RCOR            shift and go to state 120
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 107
+
+    (52) llamada -> ID LPAR lista_exp RPAR .
+
+    PCOMA           reduce using rule 52 (llamada -> ID LPAR lista_exp RPAR .)
+
+
+state 108
+
+    (26) lista_exp -> lista_exp COMA . exp
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 121
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 109
+
+    (25) lista_arr -> LCOR exp RCOR .
+
+    IGUAL           reduce using rule 25 (lista_arr -> LCOR exp RCOR .)
+    LCOR            reduce using rule 25 (lista_arr -> LCOR exp RCOR .)
+    MAS             reduce using rule 25 (lista_arr -> LCOR exp RCOR .)
+    MENOS           reduce using rule 25 (lista_arr -> LCOR exp RCOR .)
+    MULTIPLICACION  reduce using rule 25 (lista_arr -> LCOR exp RCOR .)
+    DIVISION        reduce using rule 25 (lista_arr -> LCOR exp RCOR .)
+    PCOMA           reduce using rule 25 (lista_arr -> LCOR exp RCOR .)
+    RPAR            reduce using rule 25 (lista_arr -> LCOR exp RCOR .)
+    COMA            reduce using rule 25 (lista_arr -> LCOR exp RCOR .)
+    RCOR            reduce using rule 25 (lista_arr -> LCOR exp RCOR .)
+
+
+state 110
+
+    (32) lista_arr2 -> LCOR lista_arr2 PCOMA exp RCOR .
+
+    RPAR            reduce using rule 32 (lista_arr2 -> LCOR lista_arr2 PCOMA exp RCOR .)
+    COMA            reduce using rule 32 (lista_arr2 -> LCOR lista_arr2 PCOMA exp RCOR .)
+    IGUAL           reduce using rule 32 (lista_arr2 -> LCOR lista_arr2 PCOMA exp RCOR .)
+    PCOMA           reduce using rule 32 (lista_arr2 -> LCOR lista_arr2 PCOMA exp RCOR .)
+
+
+state 111
+
+    (33) lista_arr2 -> LCOR tipo_var PCOMA exp RCOR .
+
+    RPAR            reduce using rule 33 (lista_arr2 -> LCOR tipo_var PCOMA exp RCOR .)
+    COMA            reduce using rule 33 (lista_arr2 -> LCOR tipo_var PCOMA exp RCOR .)
+    IGUAL           reduce using rule 33 (lista_arr2 -> LCOR tipo_var PCOMA exp RCOR .)
+    PCOMA           reduce using rule 33 (lista_arr2 -> LCOR tipo_var PCOMA exp RCOR .)
+
+
+state 112
+
+    (50) print -> PRINT AD LPAR exp RPAR .
+
+    PCOMA           reduce using rule 50 (print -> PRINT AD LPAR exp RPAR .)
+
+
+state 113
+
+    (39) expmath -> exp MAS exp .
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    MAS             reduce using rule 39 (expmath -> exp MAS exp .)
+    MENOS           reduce using rule 39 (expmath -> exp MAS exp .)
+    PCOMA           reduce using rule 39 (expmath -> exp MAS exp .)
+    RPAR            reduce using rule 39 (expmath -> exp MAS exp .)
+    COMA            reduce using rule 39 (expmath -> exp MAS exp .)
+    RCOR            reduce using rule 39 (expmath -> exp MAS exp .)
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+  ! MULTIPLICACION  [ reduce using rule 39 (expmath -> exp MAS exp .) ]
+  ! DIVISION        [ reduce using rule 39 (expmath -> exp MAS exp .) ]
+  ! MAS             [ shift and go to state 97 ]
+  ! MENOS           [ shift and go to state 98 ]
+
+
+state 114
+
+    (40) expmath -> exp MENOS exp .
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    MAS             reduce using rule 40 (expmath -> exp MENOS exp .)
+    MENOS           reduce using rule 40 (expmath -> exp MENOS exp .)
+    PCOMA           reduce using rule 40 (expmath -> exp MENOS exp .)
+    RPAR            reduce using rule 40 (expmath -> exp MENOS exp .)
+    COMA            reduce using rule 40 (expmath -> exp MENOS exp .)
+    RCOR            reduce using rule 40 (expmath -> exp MENOS exp .)
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+  ! MULTIPLICACION  [ reduce using rule 40 (expmath -> exp MENOS exp .) ]
+  ! DIVISION        [ reduce using rule 40 (expmath -> exp MENOS exp .) ]
+  ! MAS             [ shift and go to state 97 ]
+  ! MENOS           [ shift and go to state 98 ]
+
+
+state 115
+
+    (41) expmath -> exp MULTIPLICACION exp .
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    MAS             reduce using rule 41 (expmath -> exp MULTIPLICACION exp .)
+    MENOS           reduce using rule 41 (expmath -> exp MULTIPLICACION exp .)
+    MULTIPLICACION  reduce using rule 41 (expmath -> exp MULTIPLICACION exp .)
+    DIVISION        reduce using rule 41 (expmath -> exp MULTIPLICACION exp .)
+    PCOMA           reduce using rule 41 (expmath -> exp MULTIPLICACION exp .)
+    RPAR            reduce using rule 41 (expmath -> exp MULTIPLICACION exp .)
+    COMA            reduce using rule 41 (expmath -> exp MULTIPLICACION exp .)
+    RCOR            reduce using rule 41 (expmath -> exp MULTIPLICACION exp .)
+
+  ! MAS             [ shift and go to state 97 ]
+  ! MENOS           [ shift and go to state 98 ]
+  ! MULTIPLICACION  [ shift and go to state 99 ]
+  ! DIVISION        [ shift and go to state 100 ]
+
+
+state 116
+
+    (42) expmath -> exp DIVISION exp .
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    MAS             reduce using rule 42 (expmath -> exp DIVISION exp .)
+    MENOS           reduce using rule 42 (expmath -> exp DIVISION exp .)
+    MULTIPLICACION  reduce using rule 42 (expmath -> exp DIVISION exp .)
+    DIVISION        reduce using rule 42 (expmath -> exp DIVISION exp .)
+    PCOMA           reduce using rule 42 (expmath -> exp DIVISION exp .)
+    RPAR            reduce using rule 42 (expmath -> exp DIVISION exp .)
+    COMA            reduce using rule 42 (expmath -> exp DIVISION exp .)
+    RCOR            reduce using rule 42 (expmath -> exp DIVISION exp .)
+
+  ! MAS             [ shift and go to state 97 ]
+  ! MENOS           [ shift and go to state 98 ]
+  ! MULTIPLICACION  [ shift and go to state 99 ]
+  ! DIVISION        [ shift and go to state 100 ]
+
+
+state 117
+
+    (35) exp -> LPAR valores LPAR .
+
+    MAS             reduce using rule 35 (exp -> LPAR valores LPAR .)
+    MENOS           reduce using rule 35 (exp -> LPAR valores LPAR .)
+    MULTIPLICACION  reduce using rule 35 (exp -> LPAR valores LPAR .)
+    DIVISION        reduce using rule 35 (exp -> LPAR valores LPAR .)
+    PCOMA           reduce using rule 35 (exp -> LPAR valores LPAR .)
+    RPAR            reduce using rule 35 (exp -> LPAR valores LPAR .)
+    COMA            reduce using rule 35 (exp -> LPAR valores LPAR .)
+    RCOR            reduce using rule 35 (exp -> LPAR valores LPAR .)
+
+
+state 118
+
+    (45) exparr -> LCOR lista_exp RCOR .
+
+    MAS             reduce using rule 45 (exparr -> LCOR lista_exp RCOR .)
+    MENOS           reduce using rule 45 (exparr -> LCOR lista_exp RCOR .)
+    MULTIPLICACION  reduce using rule 45 (exparr -> LCOR lista_exp RCOR .)
+    DIVISION        reduce using rule 45 (exparr -> LCOR lista_exp RCOR .)
+    PCOMA           reduce using rule 45 (exparr -> LCOR lista_exp RCOR .)
+    RPAR            reduce using rule 45 (exparr -> LCOR lista_exp RCOR .)
+    COMA            reduce using rule 45 (exparr -> LCOR lista_exp RCOR .)
+    RCOR            reduce using rule 45 (exparr -> LCOR lista_exp RCOR .)
+
+
+state 119
+
+    (46) exparr -> LCOR exp PCOMA . exp RCOR
+    (34) exp -> . valores
+    (35) exp -> . LPAR valores LPAR
+    (36) exp -> . expmath
+    (37) exp -> . exparr
+    (38) exp -> . ID
+    (47) valores -> . ENTERO
+    (48) valores -> . DECIMAL
+    (49) valores -> . CADENA
+    (39) expmath -> . exp MAS exp
+    (40) expmath -> . exp MENOS exp
+    (41) expmath -> . exp MULTIPLICACION exp
+    (42) expmath -> . exp DIVISION exp
+    (43) expmath -> . MENOS exp
+    (44) exparr -> . ID lista_arr
+    (45) exparr -> . LCOR lista_exp RCOR
+    (46) exparr -> . LCOR exp PCOMA exp RCOR
+
+    LPAR            shift and go to state 78
+    ID              shift and go to state 75
+    ENTERO          shift and go to state 81
+    DECIMAL         shift and go to state 82
+    CADENA          shift and go to state 83
+    MENOS           shift and go to state 84
+    LCOR            shift and go to state 85
+
+    exp                            shift and go to state 122
+    valores                        shift and go to state 77
+    expmath                        shift and go to state 79
+    exparr                         shift and go to state 80
+
+state 120
+
+    (24) lista_arr -> lista_arr LCOR exp RCOR .
+
+    IGUAL           reduce using rule 24 (lista_arr -> lista_arr LCOR exp RCOR .)
+    LCOR            reduce using rule 24 (lista_arr -> lista_arr LCOR exp RCOR .)
+    MAS             reduce using rule 24 (lista_arr -> lista_arr LCOR exp RCOR .)
+    MENOS           reduce using rule 24 (lista_arr -> lista_arr LCOR exp RCOR .)
+    MULTIPLICACION  reduce using rule 24 (lista_arr -> lista_arr LCOR exp RCOR .)
+    DIVISION        reduce using rule 24 (lista_arr -> lista_arr LCOR exp RCOR .)
+    PCOMA           reduce using rule 24 (lista_arr -> lista_arr LCOR exp RCOR .)
+    RPAR            reduce using rule 24 (lista_arr -> lista_arr LCOR exp RCOR .)
+    COMA            reduce using rule 24 (lista_arr -> lista_arr LCOR exp RCOR .)
+    RCOR            reduce using rule 24 (lista_arr -> lista_arr LCOR exp RCOR .)
+
+
+state 121
+
+    (26) lista_exp -> lista_exp COMA exp .
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    RPAR            reduce using rule 26 (lista_exp -> lista_exp COMA exp .)
+    COMA            reduce using rule 26 (lista_exp -> lista_exp COMA exp .)
+    RCOR            reduce using rule 26 (lista_exp -> lista_exp COMA exp .)
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 122
+
+    (46) exparr -> LCOR exp PCOMA exp . RCOR
+    (39) expmath -> exp . MAS exp
+    (40) expmath -> exp . MENOS exp
+    (41) expmath -> exp . MULTIPLICACION exp
+    (42) expmath -> exp . DIVISION exp
+
+    RCOR            shift and go to state 123
+    MAS             shift and go to state 97
+    MENOS           shift and go to state 98
+    MULTIPLICACION  shift and go to state 99
+    DIVISION        shift and go to state 100
+
+
+state 123
+
+    (46) exparr -> LCOR exp PCOMA exp RCOR .
+
+    MAS             reduce using rule 46 (exparr -> LCOR exp PCOMA exp RCOR .)
+    MENOS           reduce using rule 46 (exparr -> LCOR exp PCOMA exp RCOR .)
+    MULTIPLICACION  reduce using rule 46 (exparr -> LCOR exp PCOMA exp RCOR .)
+    DIVISION        reduce using rule 46 (exparr -> LCOR exp PCOMA exp RCOR .)
+    PCOMA           reduce using rule 46 (exparr -> LCOR exp PCOMA exp RCOR .)
+    RPAR            reduce using rule 46 (exparr -> LCOR exp PCOMA exp RCOR .)
+    COMA            reduce using rule 46 (exparr -> LCOR exp PCOMA exp RCOR .)
+    RCOR            reduce using rule 46 (exparr -> LCOR exp PCOMA exp RCOR .)
+
