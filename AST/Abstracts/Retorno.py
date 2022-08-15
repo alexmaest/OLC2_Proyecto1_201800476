@@ -13,8 +13,12 @@ class TYPE_DECLARATION(Enum):
     SIMPLE = 7,
     ARRAY = 8,
     VECTOR = 9,
-    STRUCT = 10
-    NULL = 11
+    STRUCT = 10,
+    NULL = 11,
+    #Tipos de transferencia
+    BREAK = 12,
+    RETURN = 13,
+    CONTINUE = 14
 
 class Retorno():
     def __init__(self, typeVar, value, typeSingle):

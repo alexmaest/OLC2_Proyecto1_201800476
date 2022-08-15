@@ -4,7 +4,15 @@ reserved = {
     'mut' : 'MUT',
     '&mut' : 'aMUT',
     'fn' : 'FN',
+    'if' : 'IF',
+    'else' : 'ELSE',
+    'match' : 'MATCH',
+    'loop' : 'LOOP',
+    'while' : 'WHILE',
     'println' : 'PRINT',
+    'break' : 'BREAK',
+    'return' : 'RETURN',
+    'continue' : 'CONTINUE',
     'let' : 'LET',
     'i64' : 'I64',
     'f64' : 'F64',
@@ -17,9 +25,9 @@ reserved = {
 }
 
 tokens = [
-    'ID','ENTERO','CADENA','DECIMAL',
-    'MAS','MENOS','MULTIPLICACION','DIVISION',
-    'IGUAL','LCOR','RCOR','LPAR','RPAR','LLLAV','RLLAV','COMA','PCOMA','DPUNTOS','AD','ARROW'
+    'ID','ENTERO','CADENA','DECIMAL','BOOLEANO',
+    'MAS','MENOS','MULTIPLICACION','DIVISION','MAYOR','MENOR','MAYORI','MENORI','IGUALI','DIF','OR','AND',
+    'IGUAL','LCOR','RCOR','LPAR','RPAR','LLLAV','RLLAV','COMA','PCOMA','DPUNTOS','AD','ARROW','ARROW2','ORSINGLE'
 ] + list(reserved.values())
 
 t_MAS    = r'\+'
@@ -38,6 +46,21 @@ t_PCOMA = r';'
 t_DPUNTOS = r':'
 t_AD = r'!'
 t_ARROW = r'[\-][\>]'
+t_ARROW2 = r'[\=][\>]'
+t_MAYOR = r'[\>]'
+t_MENOR = r'[\<]'
+t_MAYORI = r'[\>][\=]'
+t_MENORI = r'[\<][\=]'
+t_IGUALI = r'[\=][\=]'
+t_DIF = r'[\!][\=]'
+t_ORSINGLE = r'[\|]'
+t_AND = r'[\&][\&]'
+
+def t_BOOLEANO(t):
+    r'(true|false)'
+    if t.value == 'true': t.value = True
+    else: t.value = False
+    return t
 
 def t_ID(t):
     r'[A-Za-z_][A-Za-z0-9_]*'
@@ -69,6 +92,10 @@ def t_ENTERO(t):
     except ValueError:
         print("Integer value too large %d", t.value)
         t.value = 0
+    return t
+
+def t_OR(t):
+    r'[\|][\|]'
     return t
 
 t_ignore = " \t"

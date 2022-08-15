@@ -6,6 +6,7 @@ class Access():
         self.id = id
 
     def executeInstruction(self, enviroment):
+        if self.id == '_': return None
         value = enviroment.getVariable(self.id)
         if(value == None):
             print("Error: La variable",self.id,"no existe")
