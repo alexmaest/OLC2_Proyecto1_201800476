@@ -15,15 +15,19 @@ class Logic():
     def executeInstruction(self, enviroment):
         leftValue = self.lExp.executeInstruction(enviroment)
         rightValue = self.rExp.executeInstruction(enviroment)
-        if self.type == TYPE_LOGICAL.AND:
-            result = leftValue.value and rightValue.value
-            return Retorno(TYPE_DECLARATION.BOOLEAN, result, TYPE_DECLARATION.SIMPLE)
-        elif self.type == TYPE_LOGICAL.OR:
-            result = leftValue.value or rightValue.value
-            return Retorno(TYPE_DECLARATION.BOOLEAN, result, TYPE_DECLARATION.SIMPLE)
-        elif self.type == TYPE_LOGICAL.NOT:
-            result = not(leftValue.value)
-            return Retorno(TYPE_DECLARATION.BOOLEAN, result, TYPE_DECLARATION.SIMPLE)
+        if leftValue != None and rightValue != None:
+            if self.type == TYPE_LOGICAL.AND:
+                result = leftValue.value and rightValue.value
+                return Retorno(TYPE_DECLARATION.BOOLEAN, result, TYPE_DECLARATION.SIMPLE)
+            elif self.type == TYPE_LOGICAL.OR:
+                result = leftValue.value or rightValue.value
+                return Retorno(TYPE_DECLARATION.BOOLEAN, result, TYPE_DECLARATION.SIMPLE)
+            elif self.type == TYPE_LOGICAL.NOT:
+                result = not(leftValue.value)
+                return Retorno(TYPE_DECLARATION.BOOLEAN, result, TYPE_DECLARATION.SIMPLE)
+            else:
+                print("Error: No se ha podido realizar la logica de comparación")
+                return None
         else:
             print("Error: No se ha podido realizar la logica de comparación")
-            return Retorno(TYPE_DECLARATION.BOOLEAN, None, TYPE_DECLARATION.SIMPLE)
+            return None

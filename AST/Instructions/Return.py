@@ -8,6 +8,9 @@ class Return(Instruccion):
     def executeInstruction(self, enviroment):
         if self.exp != None:
             returned = self.exp.executeInstruction(enviroment)
-            return Retorno(returned.typeVar,returned.value,returned.typeSingle)
+            if returned != None:
+                return Retorno(returned.typeVar,returned.value,returned.typeSingle)
+            else:
+                None
         else:
-            return Retorno(None,None,TYPE_DECLARATION.RETURN)
+            None

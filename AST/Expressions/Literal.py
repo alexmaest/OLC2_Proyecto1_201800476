@@ -13,5 +13,7 @@ class Literal():
             return Retorno(TYPE_DECLARATION.FLOAT,self.value,TYPE_DECLARATION.SIMPLE)
         elif self.type == 2:
             return Retorno(TYPE_DECLARATION.STRING,self.value,TYPE_DECLARATION.SIMPLE)
+        elif self.type == 3:
+            return Retorno(TYPE_DECLARATION.aSTRING,self.value,TYPE_DECLARATION.SIMPLE)
         elif self.type == 4:
             return Retorno(TYPE_DECLARATION.BOOLEAN,self.value,TYPE_DECLARATION.SIMPLE)

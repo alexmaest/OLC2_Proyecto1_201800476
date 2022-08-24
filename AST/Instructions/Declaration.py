@@ -8,9 +8,8 @@ class Declaration(Instruccion):
         self.assignation = assignation
 
     def executeInstruction(self, enviroment):
-        exp = self.assignation.getExpression().executeInstruction(enviroment)
-        if exp.value != None:
-            enviroment.saveVariable(Symbol(exp.typeVar,self.assignation.id.id,None,exp.typeSingle,self.mutable))
-            self.assignation.executeInstruction(enviroment)
+        exp = self.assignation.expression.executeInstruction(enviroment)
+        if exp != None:
+            enviroment.saveVariable(Symbol(exp.typeVar,self.assignation.id.id,exp.value,exp.typeSingle,self.mutable))
         else:
-                print("Error: La variable no ha podido ser declarada")
+            print("Error: La variable no ha podido ser declarada")

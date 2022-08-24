@@ -9,13 +9,14 @@ class If(Instruccion):
 
     def executeInstruction(self, enviroment):
         condition = self.condition.executeInstruction(enviroment)
-        if condition.typeVar == TYPE_DECLARATION.BOOLEAN:
-            if condition.value == True:
-                return self.statement.executeInstruction(enviroment)
-            elif condition.value == False:
-                if self.other != None:
-                    return self.other.executeInstruction(enviroment)
+        if condition != None:
+            if condition.typeVar == TYPE_DECLARATION.BOOLEAN:
+                if condition.value == True:
+                    return self.statement.executeInstruction(enviroment)
+                elif condition.value == False:
+                    if self.other != None:
+                        return self.other.executeInstruction(enviroment)
+                else:
+                    print("Error: La condición no se ha podido evaluar")
             else:
-                print("Error: La condición no se ha podido evaluar")
-        else:
-            print("Error: La condición no es un booleano")
+                print("Error: La condición no es un booleano")

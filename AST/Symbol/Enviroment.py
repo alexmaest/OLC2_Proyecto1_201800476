@@ -59,3 +59,9 @@ class Enviroment():
                     return single
             env = env.previous
         return None
+    
+    def getGlobal(self):
+        env = self
+        while(env.previous != None):
+            env = env.previous
+        return env

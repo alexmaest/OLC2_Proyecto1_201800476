@@ -1,14 +1,38 @@
 from Grammar.parser import startParser
-#let SingleA1 : [i64;5] = 30;
-#println!(SingleA1);
+#mut x -> mut x :[i64;3]
+#&mut x -> x : &mut[i64;3]
+#x -> x : [i64;3]
+#&mut x -> mut x : &[i64;3]
+#&mut x -> x : &[i64;3]
 s = '''
     fn Main() {
         println!("Desde el Main");
-        let varX : i64 = 9;
-        let alex = ["single" + 5; 3 +3 ];
-        let single = -4;
-        let single2 = "Hola"+single;
-        single1(varX);
+        let str1 : [string;2] = ["Hola".to_string(),"Hola".to_string()];
+        let str2 : &str = "pana";
+        println!(str1);
+        println!(str2);
+        let varX : [i64;3] = [1,2,3];
+        let mut alex = [5 ; 3];
+        println!(varX);
+        println!(alex);
+        alex = [10,20,30];
+        println!(alex);
+        println!(varX);
+        singleOne(varX);
+        println!(varX);
+    }
+
+    fn suma(x : i64, y: i64) -> i64{
+        println!("Hola desde suma");
+        println!(x);
+        println!(y);
+        return x + y;
+    }
+
+    fn singleOne(x: [i64;3]){
+        println!(x);
+        x = [5,6,7];
+        println!(x);
     }
 
     fn single1(var1 : i64){
@@ -17,7 +41,7 @@ s = '''
         match var1 {
             1 | 2 => {
                 let x = 100;
-                println!("Rango de 1 a 3: "+x);
+                println!("Rango de 1 a 3: ");
             },
             6 | 7 | 8 => println!("Rango de 6 a 8"),
             _ =>println!("Si o si"),
@@ -57,7 +81,7 @@ s = '''
                 infinite = infinite + 1;
                 continue;
             }else{
-                println!("infinite: "+infinite);
+                println!("infinite: ");
                 infinite = infinite + 1;
             }
         }

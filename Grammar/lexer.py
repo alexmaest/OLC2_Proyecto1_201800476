@@ -9,6 +9,8 @@ reserved = {
     'match' : 'MATCH',
     'loop' : 'LOOP',
     'while' : 'WHILE',
+    'for' : 'FOR',
+    'in' : 'IN',
     'println' : 'PRINT',
     'break' : 'BREAK',
     'return' : 'RETURN',
@@ -18,33 +20,45 @@ reserved = {
     'f64' : 'F64',
     'bool' : 'BOOL',
     'char' : 'CHAR',
-    '&str' : 'aSTR',
-    'String' : 'STRING',
+    'str' : 'aSTR',
+    'string' : 'STRING',
     'usize' : 'USIZE',
     'vec' : 'VEC',
+    'to_string' : 'TOSTRING',
+    'clone' : 'CLONE',
+    'len' : 'LEN',
+    'remove' : 'REMOVE',
+    'contains' : 'CONTAINS',
+    'new' : 'NEW',
+    'with_capacity' : 'WITHCAPACITY',
+    'to_owned' : 'TOOWNED',
+    'capacity' : 'CAPACITY',
+    'push' : 'PUSH',
+    'insert' : 'INSERT',
 }
 
 tokens = [
     'ID','ENTERO','CADENA','DECIMAL','BOOLEANO',
     'MAS','MENOS','MULTIPLICACION','DIVISION','MAYOR','MENOR','MAYORI','MENORI','IGUALI','DIF','OR','AND',
-    'IGUAL','LCOR','RCOR','LPAR','RPAR','LLLAV','RLLAV','COMA','PCOMA','DPUNTOS','AD','ARROW','ARROW2','ORSINGLE'
+    'IGUAL','LCOR','RCOR','LPAR','RPAR','LLLAV','RLLAV','PUNTO','COMA','PCOMA','DPUNTOS','AD','ARROW','ARROW2','ORSINGLE','ANDSINGLE'
 ] + list(reserved.values())
 
 t_MAS    = r'\+'
-t_MENOS   = r'-'
+t_MENOS   = r'\-'
 t_MULTIPLICACION   = r'\*'
-t_DIVISION  = r'/'
-t_IGUAL  = r'='
+t_DIVISION  = r'\/'
+t_IGUAL  = r'\='
 t_LPAR  = r'\('
 t_RPAR  = r'\)'
 t_LLLAV  = r'\{'
 t_RLLAV  = r'\}'
 t_LCOR  = r'\['
 t_RCOR  = r'\]'
-t_COMA = r','
-t_PCOMA = r';'
-t_DPUNTOS = r':'
-t_AD = r'!'
+t_COMA = r'\,'
+t_PUNTO = r'\.'
+t_PCOMA = r'\;'
+t_DPUNTOS = r'\:'
+t_AD = r'\!'
 t_ARROW = r'[\-][\>]'
 t_ARROW2 = r'[\=][\>]'
 t_MAYOR = r'[\>]'
@@ -54,7 +68,7 @@ t_MENORI = r'[\<][\=]'
 t_IGUALI = r'[\=][\=]'
 t_DIF = r'[\!][\=]'
 t_ORSINGLE = r'[\|]'
-t_AND = r'[\&][\&]'
+t_ANDSINGLE = r'[\&]'
 
 def t_BOOLEANO(t):
     r'(true|false)'
@@ -96,6 +110,10 @@ def t_ENTERO(t):
 
 def t_OR(t):
     r'[\|][\|]'
+    return t
+
+def t_AND(t):
+    r'[\&][\&]'
     return t
 
 t_ignore = " \t"

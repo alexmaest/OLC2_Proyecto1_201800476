@@ -14,10 +14,14 @@ class NewDefaultArray():
         self.finalArray = []
         singleValue = self.value.executeInstruction(enviroment)
         singleSize = self.size.executeInstruction(enviroment)
-        if singleSize.typeVar == TYPE_DECLARATION.INTEGER:
-            for number in range(singleSize.value):
-                self.finalArray.append(singleValue.value)
-            return Retorno(singleValue.typeVar,self.finalArray,TYPE_DECLARATION.ARRAY)
+        if singleValue != None and singleSize != None:
+            if singleSize.typeVar == TYPE_DECLARATION.INTEGER:
+                for number in range(singleSize.value):
+                    self.finalArray.append(singleValue)
+                return Retorno(singleValue.typeVar,self.finalArray,TYPE_DECLARATION.ARRAY)
+            else:
+                print("Error: No se ha podido crear la lista debido a que el tamaño para la lista no es un entero")    
+                return None
         else:
-            print("Error: No se ha podido crear la lista debido a que el tamaño para la lista no es un entero")    
-            return Retorno(singleValue.typeVar,None,TYPE_DECLARATION.ARRAY)
+            print("Error: No se ha podido crear la lista")    
+            return None
