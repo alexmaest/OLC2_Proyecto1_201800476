@@ -14,9 +14,12 @@ class TYPE_NATIVE(Enum):
     CONTAINS = 6,
     PUSH = 7,
     INSERT = 8,
+    CHARS = 9,
+    SQRT = 10,
+    ABS = 11,
     #Creacion de Arrays
-    NEW = 9,
-    WITH_CAPACITY = 10
+    NEW = 12,
+    WITH_CAPACITY = 13
 
 class CallNative():
     def __init__(self, exp, type):
@@ -24,25 +27,35 @@ class CallNative():
         self.type = type
 
     def executeInstruction(self,enviroment):
+        returnedValue = None
+        if self.exp != None:
+            returnedValue = self.exp.executeInstruction(enviroment).value
+
         if self.type == 0:
-            return Retorno(TYPE_NATIVE.TO_STRING,self.exp,TYPE_DECLARATION.NULL)
+            return Retorno(TYPE_NATIVE.TO_STRING,returnedValue,TYPE_DECLARATION.NULL)
         elif self.type == 1:
-            return Retorno(TYPE_NATIVE.TO_OWNED,self.exp,TYPE_DECLARATION.NULL)
+            return Retorno(TYPE_NATIVE.TO_OWNED,returnedValue,TYPE_DECLARATION.NULL)
         elif self.type == 2:
-            return Retorno(TYPE_NATIVE.CLONE,self.exp,TYPE_DECLARATION.NULL)
+            return Retorno(TYPE_NATIVE.CLONE,returnedValue,TYPE_DECLARATION.NULL)
         elif self.type == 3:
-            return Retorno(TYPE_NATIVE.LEN,self.exp,TYPE_DECLARATION.NULL)
+            return Retorno(TYPE_NATIVE.LEN,returnedValue,TYPE_DECLARATION.NULL)
         elif self.type == 4:
-            return Retorno(TYPE_NATIVE.CAPACITY,self.exp,TYPE_DECLARATION.NULL)
+            return Retorno(TYPE_NATIVE.CAPACITY,returnedValue,TYPE_DECLARATION.NULL)
         elif self.type == 5:
-            return Retorno(TYPE_NATIVE.REMOVE,self.exp,TYPE_DECLARATION.NULL)
+            return Retorno(TYPE_NATIVE.REMOVE,returnedValue,TYPE_DECLARATION.NULL)
         elif self.type == 6:
-            return Retorno(TYPE_NATIVE.CONTAINS,self.exp,TYPE_DECLARATION.NULL)
+            return Retorno(TYPE_NATIVE.CONTAINS,returnedValue,TYPE_DECLARATION.NULL)
         elif self.type == 7:
-            return Retorno(TYPE_NATIVE.PUSH,self.exp,TYPE_DECLARATION.NULL)
+            return Retorno(TYPE_NATIVE.PUSH,returnedValue,TYPE_DECLARATION.NULL)
         elif self.type == 8:
-            return Retorno(TYPE_NATIVE.INSERT,self.exp,TYPE_DECLARATION.NULL)
+            return Retorno(TYPE_NATIVE.INSERT,returnedValue,TYPE_DECLARATION.NULL)
         elif self.type == 9:
-            return Retorno(TYPE_NATIVE.NEW,self.exp,TYPE_DECLARATION.NULL)
+            return Retorno(TYPE_NATIVE.CHARS,returnedValue,TYPE_DECLARATION.NULL)
+        elif self.type == 10:
+            return Retorno(TYPE_NATIVE.SQRT,returnedValue,TYPE_DECLARATION.NULL)
+        elif self.type == 11:
+            return Retorno(TYPE_NATIVE.ABS,returnedValue,TYPE_DECLARATION.NULL)
+        elif self.type == 12:
+            return Retorno(TYPE_NATIVE.NEW,returnedValue,TYPE_DECLARATION.NULL)
         else:
-            return Retorno(TYPE_NATIVE.WITH_CAPACITY,self.exp,TYPE_DECLARATION.NULL)
+            return Retorno(TYPE_NATIVE.WITH_CAPACITY,returnedValue,TYPE_DECLARATION.NULL)

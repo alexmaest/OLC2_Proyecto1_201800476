@@ -11,6 +11,7 @@ class Return(Instruccion):
             if returned != None:
                 return Retorno(returned.typeVar,returned.value,returned.typeSingle)
             else:
-                None
+                print("Error: El return no es valido")
+                return None
         else:
-            None
+            return None

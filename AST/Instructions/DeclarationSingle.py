@@ -14,11 +14,15 @@ class DeclarationSingle(Instruccion):
         exp = self.expression.executeInstruction(enviroment)
         if content != None and exp != None:
             if content.typeSingle == TYPE_DECLARATION.SIMPLE or content.typeSingle == TYPE_DECLARATION.VECTOR:
-                if exp.typeVar == content.typeVar:
-                    if content.typeSingle == exp.typeSingle:
+                if exp.typeVar == None and exp.typeSingle == TYPE_DECLARATION.VECTOR:
+                    enviroment.saveVariable(Symbol(content.typeVar,content.value[1],exp.value,content.typeSingle,content.value[0]))
+                elif content.typeSingle == exp.typeSingle:
+                    if exp.typeVar == content.typeVar:
                         enviroment.saveVariable(Symbol(content.typeVar,content.value[1],exp.value,content.typeSingle,content.value[0]))
-                    else: print("Error: Está tratando de asignar un valor de diferentes dimensiones a las que intenta declarar")
-                else: print("Error: No se puede asignar un valor",exp.typeVar,"a una variable tipo",content.typeVar)
+                    elif self.uSizeValidation(exp.typeVar,content.typeVar):
+                        enviroment.saveVariable(Symbol(TYPE_DECLARATION.USIZE,content.value[1],exp.value,content.typeSingle,content.value[0]))
+                    else: print("Error: No se puede asignar un valor",exp.typeVar,"a una variable tipo",content.typeVar)
+                else: print("Error: Está tratando de asignar un valor de diferentes dimensiones a las que intenta declarar")
             else:
                 #Comparar si las dimensiones a asignar son las mismas
                 if exp.typeVar == content.typeVar:
@@ -32,6 +36,14 @@ class DeclarationSingle(Instruccion):
                     else: print("Error: No se puede asignar un valor simple a una variable de varias dimensiones")
                 else: print("Error: No se puede asignar un valor",exp.typeVar,"a una variable tipo",content.typeVar)
         else: print("Error: No se pudo asignar la variable porque su valor es nulo")
+
+    def uSizeValidation(self, assignation, expression):
+        if assignation == TYPE_DECLARATION.USIZE and expression == TYPE_DECLARATION.INTEGER:
+            return True
+        elif assignation == TYPE_DECLARATION.INTEGER and expression == TYPE_DECLARATION.USIZE:
+            return True
+        else:
+            return False
 
     def dimensionalCompare(self, list1, list2):
         if len(list1) == len(list2):

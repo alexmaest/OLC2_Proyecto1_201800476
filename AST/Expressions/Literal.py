@@ -17,3 +17,7 @@ class Literal():
             return Retorno(TYPE_DECLARATION.aSTRING,self.value,TYPE_DECLARATION.SIMPLE)
         elif self.type == 4:
             return Retorno(TYPE_DECLARATION.BOOLEAN,self.value,TYPE_DECLARATION.SIMPLE)
+        elif self.type == 5:
+            return Retorno(TYPE_DECLARATION.CHAR,self.value,TYPE_DECLARATION.SIMPLE)
+        elif self.type == 6:
+            return Retorno(TYPE_DECLARATION.USIZE,self.value,TYPE_DECLARATION.SIMPLE)

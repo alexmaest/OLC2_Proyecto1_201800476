@@ -10,12 +10,19 @@ class AccessArray():
     def executeInstruction(self,enviroment):
         singleId = self.id.executeInstruction(enviroment)
         if singleId != None:
-            if singleId.typeSingle == TYPE_DECLARATION.ARRAY or singleId.typeSingle == TYPE_DECLARATION.VECTOR:
+            if singleId.typeSingle == TYPE_DECLARATION.ARRAY:
                 self.countDimensions(singleId.value)
                 if self.dimensions >= len(self.listAccess):
                     return self.returnValue(singleId.value,self.listAccess,0,enviroment)
                 else:
                     print("Error: La lista no posee esa cantidad de dimensiones")
+                    return None
+            elif singleId.typeSingle == TYPE_DECLARATION.VECTOR:
+                self.countDimensions(singleId.value[1])
+                if self.dimensions >= len(self.listAccess):
+                    return self.returnValue(singleId.value[1],self.listAccess,0,enviroment)
+                else:
+                    print("Error: El vector no posee esa cantidad de dimensiones")
                     return None
             else:
                 print("Error: La variable no es una lista")
@@ -25,10 +32,10 @@ class AccessArray():
 
     def returnValue(self, value, position, number, enviroment):
         returned = position[number].executeInstruction(enviroment)
-        if returned.typeVar == TYPE_DECLARATION.INTEGER:
+        if returned.typeVar == TYPE_DECLARATION.INTEGER or returned.typeVar == TYPE_DECLARATION.USIZE:
             for j in range(len(value)):
-                if (position[number].value + 1) <= len(value):
-                    if position[number].value == j:
+                if (returned.value + 1) <= len(value):
+                    if returned.value == j:
                         if len(position) > (number+1):
                             return self.returnValue(value[j].value,position,number+1,enviroment)
                         else:
@@ -37,7 +44,7 @@ class AccessArray():
                     print("Error: El indice excede el tamaño del arreglo")
                     return None
         else:
-            print("Error: El indice no es un entero")
+            print("Error: El indice para acceder no es tipo entero o usize")
             return None
         '''
         position = [0]
