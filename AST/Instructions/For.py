@@ -28,7 +28,7 @@ class For(Instruccion):
                 newEnv = Enviroment(enviroment)
                 newEnv.saveVariable(Symbol(iterativeL.typeVar,self.id,None,iterativeL.typeSingle,True))
                 for single in range(iterativeL.value,iterativeR.value):
-                    newEnv.editVariable(self.id,single.value)
+                    newEnv.editVariable(self.id,single)
                     returned = self.statement.executeInstruction(newEnv)
                     if returned != None:
                         if returned.typeSingle == TYPE_DECLARATION.BREAK:

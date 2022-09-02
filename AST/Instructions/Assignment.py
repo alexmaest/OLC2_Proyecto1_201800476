@@ -1,5 +1,7 @@
 from AST.Abstracts.Instruccion import Instruccion
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
+from AST.Expressions.Arithmetic import TYPE_OPERATION
+from AST.Instructions.AssignmentAccessArray import AssignmentAccessArray
 
 class Assignment(Instruccion):
 
@@ -22,13 +24,19 @@ class Assignment(Instruccion):
                             else: 
                                 print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
                         else:
-                            if singleId.typeVar == exp.typeVar:
-                                if singleId.typeSingle == exp.typeSingle:
-                                    enviroment.editVariable(self.idList[0].id.id, exp.value)
+                            if singleId.typeSingle == exp.typeSingle:
+
+                                if singleId.typeVar == exp.typeVar:
+                                        enviroment.editVariable(self.idList[0].id.id, exp.value)
+                                elif singleId.typeVar == TYPE_DECLARATION.INTEGER and exp.typeVar == TYPE_DECLARATION.USIZE:
+                                        enviroment.editVariable(self.idList[0].id.id, exp.value)
+                                elif singleId.typeVar == TYPE_DECLARATION.USIZE and exp.typeVar == TYPE_DECLARATION.INTEGER:
+                                        enviroment.editVariable(self.idList[0].id.id, exp.value)
                                 else: 
-                                    print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
+                                    print("Error: No se puede asignar un valor",exp.typeVar,"a una variable tipo",singleId.typeVar)
                             else: 
-                                print("Error: No se puede asignar un valor",exp.typeVar,"a una variable tipo",singleId.typeVar)
+                                print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
+
                     else:
                         #Se buscan atributos de structs
                         if exist.typeSingle == TYPE_DECLARATION.STRUCT:
@@ -36,12 +44,28 @@ class Assignment(Instruccion):
                             if founded != None:
                                 if founded.typeVar == exp.typeVar:
                                     if founded.typeSingle == exp.typeSingle:
-                                        founded.value = exp.value
+                                        newValue = []
+                                        newValue.append(founded.value[0])
+                                        newValue.append(exp.value)
+                                        founded.value = newValue
                                     else: 
                                         print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
                                 else: 
                                     print("Error: No se puede asignar un valor",exp.typeVar,"a un atributo tipo",founded.typeVar)
-                        else: 
+                        elif isinstance(self.idList[0],AssignmentAccessArray):
+                            founded = self.foundAttribute(exist, self.idList, 1)
+                            if founded != None:
+                                if founded.typeVar == exp.typeVar:
+                                    if founded.typeSingle == exp.typeSingle:
+                                        newValue = []
+                                        newValue.append(founded.value[0])
+                                        newValue.append(exp.value)
+                                        founded.value = newValue
+                                    else: 
+                                        print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
+                                else: 
+                                    print("Error: No se puede asignar un valor",exp.typeVar,"a un atributo tipo",founded.typeVar)
+                        else:
                             print("Error: La variable",self.idList[0].id.id,"no es un struct para que acceda a sus atributos")
                 else:
                     print("Error: La variable no es mutable")

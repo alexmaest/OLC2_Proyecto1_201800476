@@ -38,7 +38,7 @@ class CallStruct():
                     else:
                         print("Error: No coincide el parámetro \'",self.parameters[param].id,"\' para el struct",self.id.idList[0])
                         return None
-                return Retorno(self.id.idList[0],self.content,TYPE_DECLARATION.STRUCT)
+                return Retorno(self.id.idList[-1],self.content,TYPE_DECLARATION.STRUCT)
             else:
                 print("Error: El número de atributos del struct",self.id,"no es el correcto")
                 return None

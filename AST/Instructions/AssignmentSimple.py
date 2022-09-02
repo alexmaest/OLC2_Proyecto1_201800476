@@ -25,6 +25,12 @@ class AssignmentSimple(Instruccion):
                 content.append(typeVar.value)
                 content.append(self.reference)
                 return Retorno(typeVar.typeVar,content,TYPE_DECLARATION.ARRAY)
+            if typeVar.typeSingle == TYPE_DECLARATION.STRUCT:
+                content = []
+                content.append(self.mutable)
+                content.append(self.id)
+                content.append(self.reference)
+                return Retorno(typeVar.typeVar,content,TYPE_DECLARATION.STRUCT)
             else:
                 content = []
                 content.append(self.mutable)

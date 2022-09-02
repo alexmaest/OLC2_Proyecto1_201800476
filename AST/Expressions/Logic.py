@@ -15,6 +15,7 @@ class Logic():
     def executeInstruction(self, enviroment):
         leftValue = self.lExp.executeInstruction(enviroment)
         rightValue = self.rExp.executeInstruction(enviroment)
+        
         if leftValue != None and rightValue != None:
             if self.type == TYPE_LOGICAL.AND:
                 result = leftValue.value and rightValue.value

@@ -8,10 +8,13 @@ class DeclarationSingle(Instruccion):
     def __init__(self, asignation, expression):
         self.asignation = asignation
         self.expression = expression
+        self.newEnv = None
 
     def executeInstruction(self, enviroment):
         content = self.asignation.executeInstruction(enviroment)
         exp = self.expression.executeInstruction(enviroment)
+        if self.newEnv != None:
+            enviroment = self.newEnv
         if content != None and exp != None:
             if content.typeSingle == TYPE_DECLARATION.SIMPLE or content.typeSingle == TYPE_DECLARATION.VECTOR:
                 if exp.typeVar == None and exp.typeSingle == TYPE_DECLARATION.VECTOR:
@@ -33,6 +36,8 @@ class DeclarationSingle(Instruccion):
                             else: print("Error: Está tratando de asignar una lista de diferentes dimensiones a las que intenta declarar")
                         else:
                             enviroment.saveVariable(Symbol(content.typeVar,content.value[1],exp.value,content.typeSingle,content.value[0]))
+                    elif exp.typeSingle == content.typeSingle:
+                        enviroment.saveVariable(Symbol(content.typeVar,content.value[1],exp.value,content.typeSingle,content.value[0]))
                     else: print("Error: No se puede asignar un valor simple a una variable de varias dimensiones")
                 else: print("Error: No se puede asignar un valor",exp.typeVar,"a una variable tipo",content.typeVar)
         else: print("Error: No se pudo asignar la variable porque su valor es nulo")

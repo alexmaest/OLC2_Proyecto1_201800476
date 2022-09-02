@@ -37,7 +37,10 @@ class AccessArray():
                 if (returned.value + 1) <= len(value):
                     if returned.value == j:
                         if len(position) > (number+1):
-                            return self.returnValue(value[j].value,position,number+1,enviroment)
+                            if value[j].typeSingle == TYPE_DECLARATION.VECTOR:
+                                return self.returnValue(value[j].value[1],position,number+1,enviroment)
+                            else:
+                                return self.returnValue(value[j].value,position,number+1,enviroment)
                         else:
                             return value[j]
                 else:
@@ -59,5 +62,9 @@ class AccessArray():
     def countDimensions(self,value):
         self.dimensions += 1
         if isinstance(value,list):
-            if isinstance(value[0].value,list):
-                self.countDimensions(value[0].value)
+            if value[0].typeSingle == TYPE_DECLARATION.VECTOR:
+                if isinstance(value[0].value[1],list):
+                    self.countDimensions(value[0].value[1])
+            else:
+                if isinstance(value[0].value,list):
+                    self.countDimensions(value[0].value)

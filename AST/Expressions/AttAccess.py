@@ -1,5 +1,7 @@
 from AST.Abstracts.Expression import Expression
 from AST.Abstracts.Retorno import Retorno
+from AST.Expressions.AccessArray import AccessArray
+from AST.Expressions.AttAssign import AttAssign
 from AST.Expressions.CallNative import CallNative
 from AST.Expressions.Handler import Handler
 from AST.Instructions.Native import Native
@@ -10,9 +12,19 @@ class AttAccess():
         self.expList = expList
     
     def executeInstruction(self, enviroment):
-        exist = enviroment.getVariable(self.expList[0].id.id)
+        exist = None
+        if isinstance(self.expList[0],AttAssign):
+            if isinstance(self.expList[0].id.id,AccessArray):
+                exist = self.expList[0].id.id.executeInstruction(enviroment)
+            else:
+                exist = enviroment.getVariable(self.expList[0].id.id)
+        else: 
+            exist = self.expList[0].executeInstruction(enviroment)
         if exist != None:
-            singleId = self.expList[0].id.executeInstruction(enviroment)
+            if isinstance(self.expList[0].id.id,AccessArray):
+                singleId = exist
+            else:
+                singleId = self.expList[0].id.executeInstruction(enviroment)
             if len(self.expList) == 1:
                 #Se retornan Variables que sean normales, arrays, vectores y structs
                 return singleId

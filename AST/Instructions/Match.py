@@ -1,5 +1,5 @@
 from AST.Abstracts.Instruccion import Instruccion
-from AST.Expressions.Access import Access
+from AST.Expressions.AttAccess import AttAccess
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
 
 class Match(Instruccion):
@@ -15,8 +15,8 @@ class Match(Instruccion):
             for arm in self.statement.instructions:
                 armExps = arm.getExpressions()
                 for singleArmExp in armExps:
-                    if isinstance(singleArmExp,Access):
-                        if singleArmExp.id == '_' and self.statement.instructions[-1] == arm:
+                    if isinstance(singleArmExp,AttAccess):
+                        if singleArmExp.expList[0].id.id == '_' and self.statement.instructions[-1] == arm:
                             founded = True
                     
             if founded:
@@ -24,18 +24,19 @@ class Match(Instruccion):
                 for arm in self.statement.instructions:
                     armExps = arm.getExpressions()
                     for singleArmExp in armExps:
-                        if isinstance(singleArmExp,Access):
-                            if singleArmExp.id == '_':
+                        if isinstance(singleArmExp,AttAccess):
+                            if singleArmExp.expList[0].id.id  == '_':
                                 if not executed:
-                                    arm.executeInstruction(enviroment)
+                                    return arm.executeInstruction(enviroment)
                             else:
                                 returned = singleArmExp.executeInstruction(enviroment)
                                 if returned != None:
                                     if singleExp.typeVar == returned.typeVar:
                                         if singleExp.typeSingle == returned.typeSingle:
+                                            print(singleExp.value,"=?",returned.value)
                                             if singleExp.value == returned.value:
                                                 executed = True
-                                                arm.executeInstruction(enviroment)
+                                                return arm.executeInstruction(enviroment)
                                             else: continue
                                         else:
                                             print("Error: El valor que desea comparar no posee las dimensiones correctas")
@@ -53,7 +54,7 @@ class Match(Instruccion):
                                     if singleExp.typeSingle == returned.typeSingle:
                                         if singleExp.value == returned.value:
                                             executed = True
-                                            arm.executeInstruction(enviroment)
+                                            return arm.executeInstruction(enviroment)
                                         else: continue
                                     else:
                                         print("Error: El valor que desea comparar no posee las dimensiones correctas")

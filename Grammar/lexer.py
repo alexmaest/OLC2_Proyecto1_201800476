@@ -93,7 +93,7 @@ def t_ID(t):
     return t
 
 def t_CADENA(t):
-    r'[\"][^\"\n]*[\"]'
+    r'[\"][^\"]*[\"]'
     try:
         t.value = t.value[1:-1]
     except ValueError:
@@ -138,6 +138,10 @@ def t_AND(t):
 
 def t_COMENTARIO(t):
     r'[\/][\/].*'
+    t.lexer.lineno += 1
+
+def t_COMENTARIO_G(t):
+    r'\/\*[^\/]*\*\/'
     t.lexer.lineno += 1
 
 t_ignore = " \t\n\r"

@@ -52,12 +52,13 @@ from Grammar.lexer import tokens
 
 # Parsing precedence rules
 precedence = (
+    ('nonassoc', 'AS', 'IN'),
     ('left', 'OR'),
     ('left', 'AND'),
     ('right', 'AD'), 
     ('left', 'DIF', 'IGUALI', 'MENORI', 'MAYORI', 'MENOR', 'MAYOR'),
     ('left', 'MAS', 'MENOS'),
-    ('left', 'MULTIPLICACION', 'DIVISION'),
+    ('left', 'MULTIPLICACION', 'DIVISION', 'MODULO'),
     ('nonassoc', 'RPAR' , 'LPAR'),
     ('right', 'UMENOS')
 )
@@ -93,10 +94,15 @@ def p_instruccion_l(t):
     | declaracion PCOMA
     | asignacion PCOMA
     | llamada PCOMA
+    | expstruct PCOMA
+    | ID PUNTO exp_native PCOMA
     | sentencia
     | transferencia
     | transferencia PCOMA'''
-    t[0] = t[1]
+    if len(t.slice) > 2:
+        if t.slice[2].type == 'PUNTO': t[0] = Native(Access(t[1]),t[3])
+        else: t[0] = t[1]
+    else: t[0] = t[1]
 
 def p_funcion(t):
     '''funcion : FN ID LPAR lista_parametros RPAR ARROW tipo_var statement
@@ -157,7 +163,6 @@ def p_if(t):
     t[0] = If(t[2],t[3],t[4])
 
 def p_else(t):
-    #| #epsilon
     '''else : ELSE statement
     | ELSE if
     | epsilon'''
@@ -202,6 +207,7 @@ def p_lista_exp_brazos(t):
 def p_instruction_match(t):
     '''instruccion_match : print
     | llamada
+    | asignacion
     | sentencia
     | transferencia'''
     t[0] = t[1]
@@ -221,7 +227,7 @@ def p_for(t):
 def p_foriterative(t):
     '''foriterative : exp PUNTO PUNTO exp
     | exp'''
-    if len(t.slice) > 1:
+    if len(t.slice) > 2:
         if t.slice[2].type == 'PUNTO': t[0] = ForIterative(t[1],t[4])
         else: t[0] = t[1]        
     else: t[0] = t[1]
@@ -281,10 +287,30 @@ def p_declaracion(t):
     else: t[0] = Declaration(False,t[2])
 
 def p_asignacion(t):
-    '''asignacion : lista_assign IGUAL auxexp
-    | ID lista_arr IGUAL auxexp'''
-    if t.slice[2].type == 'IGUAL': t[0] = Assignment(t[1],t[3])
-    else: t[0] = AssignmentAccessArray(AccessArray(Access(t[1]),t[2]),t[4])
+    '''asignacion : ID IGUAL auxexp
+    | ID lista_assign2 IGUAL auxexp
+    | ID lista_arr IGUAL auxexp
+    | ID lista_arr lista_assign2 IGUAL auxexp'''
+    if t.slice[2].type == 'IGUAL': t[0] = Assignment([AttAssign(Access(t[1]))],t[3])
+    else: 
+        if t.slice[3].type == 'IGUAL': 
+            if t.slice[2].type == 'lista_assign2': 
+                single = []
+                single.append(AttAssign(Access(t[1])))
+                for valor in t[2]:
+                    single.append(valor)
+                t[0] = Assignment(single,t[4])
+            else:
+                t[0] = AssignmentAccessArray(AccessArray(Access(t[1]),t[2]),t[4],None)
+        else: t[0] = AssignmentAccessArray(AccessArray(Access(t[1]),t[2]),t[5],t[3])
+
+def p_lista_assign2(t):
+    '''lista_assign2 : lista_assign2 PUNTO ID
+    | PUNTO ID'''
+    if t.slice[1].type == 'lista_assign2':
+        t[1].append(AttAssign(t[3]))
+        t[0] = t[1]
+    else: t[0] = [AttAssign(t[2])]
 
 def p_lista_assign(t):
     '''lista_assign : lista_assign PUNTO ID
@@ -297,11 +323,16 @@ def p_lista_assign(t):
 def p_lista_acc(t):
     '''lista_acc : lista_acc PUNTO ID
     | lista_acc PUNTO exp_native
-    | ID'''
+    | auxacc'''
     if t.slice[1].type == 'lista_acc':
         t[1].append(AttAssign(t[3]))
         t[0] = t[1]
     else: t[0] = [AttAssign(Access(t[1]))]
+
+def p_auxacc(t):
+    '''auxacc : exparr
+    | ID'''
+    t[0] = t[1]
 
 def p_lista_arr(t):
     '''lista_arr : lista_arr LCOR auxexp RCOR
@@ -345,11 +376,12 @@ def p_auxexp(t):
     t[0] = t[1]
 
 def p_exp(t):
-    '''exp : LPAR exp LPAR
+    '''exp : LPAR exp RPAR
     | expmath
     | expop
     | exprel
     | exparr
+    | newarray
     | expvec
     | exparam
     | exppow
@@ -358,12 +390,13 @@ def p_exp(t):
     | llamada
     | sentencia
     | valores
-    | valores PUNTO exp_native'''
+    | exp PUNTO exp_native'''
     if t.slice[1].type == 'LPAR': t[0] = t[2]
     elif t.slice[1].type == 'expmath': t[0] = t[1]
     elif t.slice[1].type == 'expop': t[0] = t[1]
     elif t.slice[1].type == 'exprel': t[0] = t[1]
     elif t.slice[1].type == 'exparr': t[0] = t[1]
+    elif t.slice[1].type == 'newarray': t[0] = t[1]
     elif t.slice[1].type == 'expvec': t[0] = t[1]
     elif t.slice[1].type == 'exparam': t[0] = t[1]
     elif t.slice[1].type == 'exppow': t[0] = t[1]
@@ -371,7 +404,8 @@ def p_exp(t):
     elif t.slice[1].type == 'lista_acc': t[0] = AttAccess(t[1])
     elif t.slice[1].type == 'llamada': t[0] = t[1]
     elif t.slice[1].type == 'sentencia': t[0] = t[1]
-    elif t.slice[1].type == 'valores':
+    elif t.slice[1].type == 'valores': t[0] = t[1]
+    elif t.slice[1].type == 'exp':
         if len(t.slice) > 2:
             if t.slice[2].type == 'PUNTO': t[0] = Native(t[1],t[3])
             else: t[0] = t[1]
@@ -402,7 +436,7 @@ def p_explog(t):
     '''expop : exp AND exp
     | exp OR exp
     | AD exp'''
-    if t.slice[1].type == 'AD': Logic(t[1], TYPE_LOGICAL.NOT, Literal(False,TYPE_DECLARATION.BOOLEAN))
+    if t.slice[1].type == 'AD': t[0] = Logic(t[2], TYPE_LOGICAL.NOT, Handler(TYPE_DECLARATION.BOOLEAN,False,TYPE_DECLARATION.SIMPLE))
     else:
         if t.slice[2].type == 'AND': t[0] = Logic(t[1], TYPE_LOGICAL.AND, t[3])
         else: t[0] = Logic(t[1], TYPE_LOGICAL.OR, t[3])
@@ -444,15 +478,15 @@ def p_lista_struct(t):
 
 def p_exparam(t):
     '''exparam : MUT ID
-    | ANDSINGLE MUT ID'''
+    | MUT valores
+    | ANDSINGLE MUT ID
+    | ANDSINGLE MUT valores'''
     if t.slice[1].type == 'MUT': t[0] = ParamReference(True, Access(t[2]), False)
     else: t[0] = ParamReference(True, Access(t[3]), True)
 
 def p_exparr(t):
-    '''exparr : ID lista_arr
-    | newarray'''
-    if t.slice[1].type == 'ID': t[0] = AccessArray(Access(t[1]),t[2])
-    else: t[0] = t[1]
+    '''exparr : ID lista_arr'''
+    t[0] = AccessArray(Access(t[1]),t[2])
 
 def p_expvec(t):
     '''expvec : VEC AD newarray
@@ -528,9 +562,9 @@ def p_exp_native(t):
     | CLONE LPAR RPAR
     | LEN LPAR RPAR
     | CAPACITY LPAR RPAR
-    | REMOVE LPAR exp RPAR
-    | CONTAINS LPAR ANDSINGLE exp RPAR
-    | PUSH LPAR exp RPAR
+    | REMOVE LPAR auxexp RPAR
+    | CONTAINS LPAR ANDSINGLE auxexp RPAR
+    | PUSH LPAR auxexp RPAR
     | INSERT LPAR lista_exp RPAR
     | CHARS LPAR RPAR
     | SQRT LPAR RPAR
@@ -544,8 +578,8 @@ def p_exp_native(t):
     elif t.slice[1].type == 'CONTAINS': t[0] = CallNative(t[4],6)
     elif t.slice[1].type == 'PUSH': t[0] = CallNative(t[3],7)
     elif t.slice[1].type == 'INSERT': t[0] = CallNative(t[3],8)
-    elif t.slice[1].type == 'CHARS': t[0] = CallNative(t[3],9)
-    elif t.slice[1].type == 'SQRT': t[0] = CallNative(t[3],10)
+    elif t.slice[1].type == 'CHARS': t[0] = CallNative(None,9)
+    elif t.slice[1].type == 'SQRT': t[0] = CallNative(None,10)
     else: t[0] = CallNative(None,11)
 
 def p_exp_natarr(t):

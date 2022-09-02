@@ -1,7 +1,7 @@
 from AST.Expressions.Handler import Handler
 from AST.Abstracts.Expression import Expression
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
-from AST.Expressions.Access import Access
+from AST.Expressions.AttAccess import AttAccess
 from AST.Expressions.ParamReference import ParamReference
 from AST.Instructions.DeclarationSingle import DeclarationSingle
 from AST.Symbol.Enviroment import Enviroment
@@ -20,6 +20,7 @@ class CallFunction():
         Fail = False
         founded = None
         newEnv = None
+        #Crear entorno
         if self.newEnviroment != None:
             founded = self.newFunction
             newEnv = Enviroment(self.newEnviroment)
@@ -31,27 +32,28 @@ class CallFunction():
             if len(self.parameters) == len(founded.parameters):
                 count = 0
                 for param in founded.parameters:
-                    if isinstance(self.parameters[count], Access) or isinstance(self.parameters[count], ParamReference):
+                    if isinstance(self.parameters[count], AttAccess) or isinstance(self.parameters[count], ParamReference):
                         exist = None
-                        if isinstance(self.parameters[count], Access):
-                            exist = enviroment.getVariable(self.parameters[count].id)
+                        if isinstance(self.parameters[count], AttAccess):
+                            exist = enviroment.getVariable(self.parameters[count].expList[0].id.id)
                         else:
                             exist = enviroment.getVariable(self.parameters[count].id.id)
                         if exist != None:
                             if exist.mutable == param.mutable:
                                 #Validar referencia
-                                if not isinstance(self.parameters[count], Access):
+                                if not isinstance(self.parameters[count], AttAccess):
                                     if self.parameters[count].reference == param.reference:
                                         if param.reference:
                                             self.positions.append(count)
                                             singleValue = self.parameters[count].executeInstruction(enviroment)
                                             singleParam = DeclarationSingle(param,Handler(singleValue.typeVar,singleValue.value,singleValue.typeSingle))   
-                                            singleParam.executeInstruction(newEnv)             
+                                            singleParam.executeInstruction(newEnv)          
                                             count+=1
                                         else:
                                             singleValue = self.parameters[count].executeInstruction(enviroment)
                                             singleParam = DeclarationSingle(param,Handler(singleValue.typeVar,singleValue.value,singleValue.typeSingle))   
-                                            singleParam.executeInstruction(newEnv)             
+                                            singleParam.newEnv = newEnv
+                                            singleParam.executeInstruction(enviroment)            
                                             count+=1
                                     else:
                                         print("Error: Se esperaba una referencia diferente de la variable que ingresó como parametro")
@@ -61,7 +63,8 @@ class CallFunction():
                                     if not param.reference:
                                         singleValue = self.parameters[count].executeInstruction(enviroment)
                                         singleParam = DeclarationSingle(param,Handler(singleValue.typeVar,singleValue.value,singleValue.typeSingle))   
-                                        singleParam.executeInstruction(newEnv)             
+                                        singleParam.newEnv = newEnv
+                                        singleParam.executeInstruction(enviroment)             
                                         count+=1
                                     else:
                                         print("Error: Se esperaba una referencia diferente de la variable que ingresó como parametro")
@@ -76,8 +79,9 @@ class CallFunction():
                             Fail = True
                             break
                     else:
-                        singleParam = DeclarationSingle(param,self.parameters[count])   
-                        singleParam.executeInstruction(newEnv)             
+                        singleParam = DeclarationSingle(param,self.parameters[count])
+                        singleParam.newEnv = newEnv
+                        singleParam.executeInstruction(enviroment)             
                         count+=1
                 
                 if not Fail:
@@ -88,11 +92,7 @@ class CallFunction():
                         if returnedValue.typeSingle != TYPE_DECLARATION.BREAK and returnedValue.typeSingle != TYPE_DECLARATION.CONTINUE:
                             typeReturned = founded.type.executeInstruction(newEnv)
                             if typeReturned != None:
-                                if typeReturned.typeVar == returnedValue.typeVar:
-                                    if typeReturned.typeSingle == returnedValue.typeSingle:
-                                        return returnedValue
-                                    else: print("Error: Está retornando un valor de diferentes dimensiones a las de la función") 
-                                else: print("Error: Está retornando un valor que no es del tipo de la función")
+                                return returnedValue
                             else: print("Error: La función",founded.id,"no puede retornar un valor porque no tiene un tipo de valor declarado")
                         else: print("Error: Una función no puede retornar una sentencia break sin expresión o continue")
                     elif returnedValue != None and founded.type == None:
@@ -105,7 +105,8 @@ class CallFunction():
                     for number in self.positions:
                         returned = founded.statement.newEnv.getVariable(founded.parameters[number].id)
                         if returned != None:
-                            if isinstance(self.parameters[number], Access):
+                            if isinstance(self.parameters[number], AttAccess):
+                                print(returned.value)
                                 exist = enviroment.editVariable(self.parameters[number].id, returned.value)
                             else:
                                 exist = enviroment.editVariable(self.parameters[number].id.id, returned.value)

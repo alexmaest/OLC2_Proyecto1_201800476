@@ -28,9 +28,20 @@ class CallNative():
 
     def executeInstruction(self,enviroment):
         returnedValue = None
-        if self.exp != None:
-            returnedValue = self.exp.executeInstruction(enviroment).value
-
+        if self.exp != None and self.type != 8:
+            if self.type == 5 or self.type == 7:
+                returnedValue = self.exp
+            else:
+                returnedValue = self.exp.executeInstruction(enviroment).value
+        elif self.type == 8:
+            if len(self.exp) == 2:
+                returnedValue = []
+                returnedValue.append(self.exp[0])
+                returnedValue.append(self.exp[1])
+            else:
+                print("Error: Solo se aceptan 2 parametros en la función insert()")
+                return None
+        
         if self.type == 0:
             return Retorno(TYPE_NATIVE.TO_STRING,returnedValue,TYPE_DECLARATION.NULL)
         elif self.type == 1:

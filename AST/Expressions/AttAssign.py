@@ -6,4 +6,4 @@ class AttAssign():
         self.id = id
     
     def executeInstruction(self, enviroment):
-        pass
+        return self.id.executeInstruction(enviroment)

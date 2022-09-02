@@ -3,9 +3,10 @@ from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
 
 class AssignmentAccessArray(Instruccion):
 
-    def __init__(self,accessArray,expression):
+    def __init__(self,accessArray,expression,attributes):
         self.accessArray = accessArray
         self.expression = expression
+        self.attributes = attributes
         self.isDeclaration = False
     
     def executeInstruction(self, enviroment):
@@ -14,14 +15,28 @@ class AssignmentAccessArray(Instruccion):
         if access != None and exp != None:
             exist = enviroment.getVariable(self.accessArray.id.id)
             if exist != None:
-                if self.isDeclaration or exist.mutable:
-                    if self.compareTypes(access,exp,enviroment):
-                        access.value = exp.value
+                if self.attributes == None:
+                    if self.isDeclaration or exist.mutable:
+                        if self.compareTypes(access,exp,enviroment):
+                            access.value = exp.value
+                        else:
+                            #Ya se dijeron los errores así que no se hace nada
+                            pass
                     else:
-                        #Ya se dijeron los errores así que no se hace nada
-                        pass
+                        print("Error: La Variable a la que desea acceder no es mutable")
                 else:
-                    print("Error: La Variable a la que desea acceder no es mutable")
+                    founded = self.foundAttribute(access,self.attributes,0)
+                    if founded != None:
+                        if founded.typeVar == exp.typeVar:
+                            if founded.typeSingle == exp.typeSingle:
+                                newValue = []
+                                newValue.append(founded.value[0])
+                                newValue.append(exp.value)
+                                founded.value = newValue
+                            else: 
+                                print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
+                        else: 
+                            print("Error: No se puede asignar un valor",exp.typeVar,"a un atributo tipo",founded.typeVar)
         else:
             print("Error: La Posición de la variable que desea acceder no pudo ser modificada")
 
@@ -42,6 +57,19 @@ class AssignmentAccessArray(Instruccion):
             print("Error: No se puede asignar un valor",exp.typeVar,"a una variable tipo",access.typeVar)
             return False
     
+
+    def foundAttribute(self, variable, list, number):
+        if list[number].id in variable.value:
+            if (number + 1) == len(list):
+                return variable.value[list[number].id]
+            else:
+                typeVar = variable.value[list[number].id].typeVar
+                value = variable.value[list[number].id].value
+                typeSingle = variable.value[list[number].id].typeSingle
+                return self.foundAttribute(Retorno(typeVar,value[1],typeSingle), list, number+1)
+        else:
+            print("Error: Atributo",list[number].id,"no encontrado de la variable",list[0].id.id) 
+            return None
         '''
         position = [0]
         value = [1,2,3,4,5]

@@ -24,7 +24,6 @@ class Print(Instruccion):
                                     if result[i] == '{}':
                                         if returnedSingle.typeSingle == TYPE_DECLARATION.SIMPLE:
                                             finalResult = re.sub('\{\}',str(returnedSingle.value), finalResult, 1)
-                                            print(finalResult)
                                         else:
                                             print("Error: Ha ingresado un valor que no es simple en \'{ }\' de la instrucción print")
                                             break
@@ -32,11 +31,9 @@ class Print(Instruccion):
                                         if returnedSingle.typeSingle == TYPE_DECLARATION.ARRAY:
                                             self.printArray(returnedSingle.value)
                                             finalResult = re.sub('\{\:\?\}',self.text, finalResult, 1)
-                                            print(finalResult)
                                         elif returnedSingle.typeSingle == TYPE_DECLARATION.VECTOR:
                                             self.printArray(returnedSingle.value[1])
                                             finalResult = re.sub('\{\:\?\}',self.text, finalResult, 1)
-                                            print(finalResult)
                                         elif returnedSingle.typeSingle == TYPE_DECLARATION.STRUCT:
                                             print("Error: No puede imprimir un struct, únicamente sus atributos")
                                             break
@@ -46,20 +43,13 @@ class Print(Instruccion):
                                 else:
                                     print("Error: Una de las expresiones que ha ingresado en println es nula")
                                     break
+                            print(finalResult)
                         else:
                             print("Error: No ha ingresado el número de expresiones correctas en función de los \'{ }\' que ha escrito")
                     else:
                         print("Error: Solo se puede imprimir una cadena como primera instrucctión de un println")
                 else:
                     print("Error: Solo se puede imprimir una cadena como primera instrucctión de un println")
-                
-                '''if value.typeSingle == TYPE_DECLARATION.ARRAY:
-                    
-                elif value.typeSingle == TYPE_DECLARATION.VECTOR:
-                    
-                elif value.typeSingle == TYPE_DECLARATION.STRUCT:
-                    print("Error: No se puede imprimir un struct, únicamente sus atributos")
-                else:print(value.value)'''
             else:
                 print("Error: No se pudo ejecutar la instrucción println")
         else:
@@ -80,10 +70,17 @@ class Print(Instruccion):
         for i in range(len(array)):
             if isinstance(array[i].value,list):
                 if (i+1) == len(array):
-                    self.printArray(array[i].value)
+                    if array[i].typeSingle == TYPE_DECLARATION.VECTOR:
+                        self.printArray(array[i].value[1])
+                    else:
+                        self.printArray(array[i].value)
                 else:
-                    self.printArray(array[i].value)
-                    self.text += ","
+                    if array[i].typeSingle == TYPE_DECLARATION.VECTOR:
+                        self.printArray(array[i].value[1])
+                        self.text += ","
+                    else:
+                        self.printArray(array[i].value)
+                        self.text += ","
             else:
                 if (i+1) == len(array):
                     self.text += str(array[i].value)
