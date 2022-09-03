@@ -7,12 +7,16 @@ from AST.Expressions.Access import Access
 from AST.Instructions.Function import Function
 from AST.Instructions.Modulo import Modulo
 from AST.Symbol.Enviroment import Enviroment
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 from enum import Enum
 
 class ModAccess():
-    def __init__(self, nameList, functionCall):
+    def __init__(self, nameList, functionCall, row, column):
         self.nameList = nameList
         self.functionCall = functionCall
+        self.row = row
+        self.column = column
     
     def executeInstruction(self, enviroment):
         #Se retornan funciones dentro de modulos
@@ -21,11 +25,11 @@ class ModAccess():
             self.nameList.append(self.functionCall.id)
             return self.saveModuleInstructions(self.nameList, found, enviroment.getGlobal(), 1, enviroment)
         else: 
-            print("Error: El modulo con id",self.nameList[0],"no existe")
+            listError.append(Error("Error: El modulo con id "+str(self.nameList[0])+" no existe","Local",self.row,self.column,"SEMANTICO"))
             return None
 
     def saveModuleInstructions(self, nameList, module, enviroment, number, permanentEnv):
-        newEnv = Enviroment(enviroment)
+        newEnv = Enviroment(enviroment,enviroment.console)
         for instruction in module.instructions.instructions:
             instruction.executeInstruction(newEnv)
 
@@ -40,10 +44,10 @@ class ModAccess():
                             self.functionCall.newEnviroment = newEnv
                             return self.functionCall.executeInstruction(permanentEnv)
                         else:
-                            print("Error: La función",nameList[number],"no es pública")
+                            listError.append(Error("Error: La función "+str(nameList[number])+" no es pública","Local",self.row,self.column,"SEMANTICO"))
                             return None
                     else:
-                        print("Error: El modulo",module.id,"no tiene ninguna función llamada",nameList[number])
+                        listError.append(Error("Error: El modulo "+str(module.id)+" no tiene ninguna función llamada "+str(nameList[number]),"Local",self.row,self.column,"SEMANTICO"))
                         return None
                 else:
                     returned = newEnv.getModule(nameList[number])
@@ -51,11 +55,11 @@ class ModAccess():
                         if instruction.isPublic:
                             return self.saveModuleInstructions(nameList, instruction.instruction, newEnv, number+1, permanentEnv)
                         else:
-                            print("Error: El modulo",nameList[number],"no es público")
+                            listError.append(Error("Error: El modulo "+str(nameList[number])+" no es público","Local",self.row,self.column,"SEMANTICO"))
                             return None
                     else:
-                        print("Error: El modulo",module.id,"no tiene ningún modulo llamado",nameList[number])
+                        listError.append(Error("Error: El modulo "+str(module.id)+" no tiene ningún modulo llamado "+str(nameList[number]),"Local",self.row,self.column,"SEMANTICO"))
                         return None
-        print("Error: No existe ningún modulo, struct o función con el nombre",nameList[number])
+        listError.append(Error("Error: No existe ningún modulo, struct o función con el nombre "+str(nameList[number]),"Local",self.row,self.column,"SEMANTICO"))
         return None
 

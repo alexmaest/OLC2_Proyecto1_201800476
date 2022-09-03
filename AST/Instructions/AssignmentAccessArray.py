@@ -1,13 +1,17 @@
 from AST.Abstracts.Instruccion import Instruccion
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 
 class AssignmentAccessArray(Instruccion):
 
-    def __init__(self,accessArray,expression,attributes):
+    def __init__(self,accessArray,expression,attributes, row, column):
         self.accessArray = accessArray
         self.expression = expression
         self.attributes = attributes
         self.isDeclaration = False
+        self.row = row
+        self.column = column
     
     def executeInstruction(self, enviroment):
         access = self.accessArray.executeInstruction(enviroment)
@@ -23,7 +27,7 @@ class AssignmentAccessArray(Instruccion):
                             #Ya se dijeron los errores así que no se hace nada
                             pass
                     else:
-                        print("Error: La Variable a la que desea acceder no es mutable")
+                        listError.append(Error("Error: La Variable a la que desea acceder no es mutable","Local",self.row,self.column,"SEMANTICO"))
                 else:
                     founded = self.foundAttribute(access,self.attributes,0)
                     if founded != None:
@@ -34,11 +38,11 @@ class AssignmentAccessArray(Instruccion):
                                 newValue.append(exp.value)
                                 founded.value = newValue
                             else: 
-                                print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
+                                listError.append(Error("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable","Local",self.row,self.column,"SEMANTICO"))
                         else: 
-                            print("Error: No se puede asignar un valor",exp.typeVar,"a un atributo tipo",founded.typeVar)
+                            listError.append(Error("Error: No se puede asignar un valor",exp.typeVar,"a un atributo tipo",founded.typeVar,"Local",self.row,self.column,"SEMANTICO"))
         else:
-            print("Error: La Posición de la variable que desea acceder no pudo ser modificada")
+            listError.append(Error("Error: La Posición de la variable que desea acceder no pudo ser modificada","Local",self.row,self.column,"SEMANTICO"))
 
     def compareTypes(self, access, exp, enviroment):
         if access.typeVar == exp.typeVar:
@@ -47,14 +51,14 @@ class AssignmentAccessArray(Instruccion):
                     if len(access.value) == len(exp.value):
                         return True
                     else: 
-                        print("Error: La longitud del arreglo que desea asignar es diferente a la declarada")
+                        listError.append(Error("Error: La longitud del arreglo que desea asignar es diferente a la declarada","Local",self.row,self.column,"SEMANTICO"))
                         return False
                 else: return True
             else: 
-                print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
+                listError.append(Error("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable","Local",self.row,self.column,"SEMANTICO"))
                 return False
         else: 
-            print("Error: No se puede asignar un valor",exp.typeVar,"a una variable tipo",access.typeVar)
+            listError.append(Error("Error: No se puede asignar un valor",exp.typeVar,"a una variable tipo",access.typeVar,"Local",self.row,self.column,"SEMANTICO"))
             return False
     
 
@@ -68,7 +72,7 @@ class AssignmentAccessArray(Instruccion):
                 typeSingle = variable.value[list[number].id].typeSingle
                 return self.foundAttribute(Retorno(typeVar,value[1],typeSingle), list, number+1)
         else:
-            print("Error: Atributo",list[number].id,"no encontrado de la variable",list[0].id.id) 
+            listError.append(Error("Error: Atributo",list[number].id,"no encontrado de la variable",list[0].id.id,"Local",self.row,self.column,"SEMANTICO"))
             return None
         '''
         position = [0]

@@ -1,11 +1,15 @@
 from AST.Abstracts.Instruccion import Instruccion
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 
 class If(Instruccion):
-    def __init__(self, condition, statement, other):
+    def __init__(self, condition, statement, other, row, column):
         self.condition = condition
         self.statement = statement
         self.other = other
+        self.row = row
+        self.column = column
 
     def executeInstruction(self, enviroment):
         condition = self.condition.executeInstruction(enviroment)
@@ -17,6 +21,6 @@ class If(Instruccion):
                     if self.other != None:
                         return self.other.executeInstruction(enviroment)
                 else:
-                    print("Error: La condición no se ha podido evaluar")
+                    listError.append(Error("Error: La condición no se ha podido evaluar","Local",self.row,self.column,"SEMANTICO"))
             else:
-                print("Error: La condición no es un booleano")
+                listError.append(Error("Error: La condición no es un booleano","Local",self.row,self.column,"SEMANTICO"))

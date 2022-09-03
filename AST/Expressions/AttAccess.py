@@ -5,11 +5,15 @@ from AST.Expressions.AttAssign import AttAssign
 from AST.Expressions.CallNative import CallNative
 from AST.Expressions.Handler import Handler
 from AST.Instructions.Native import Native
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 from enum import Enum
 
 class AttAccess():
-    def __init__(self, expList):
+    def __init__(self, expList, row, column):
         self.expList = expList
+        self.row = row
+        self.column = column
     
     def executeInstruction(self, enviroment):
         exist = None
@@ -32,11 +36,11 @@ class AttAccess():
                 #Se retornan atributos de structs
                 return self.foundAttribute(exist, self.expList, 1, enviroment)
         else:
-            print("Error: La variable",self.expList[0].id.id,"no existe")
+            listError.append(Error("Error: La variable "+str(self.expList[0].id.id)+"no existe","Local",self.row,self.column,"SEMANTICO"))
     
     def foundAttribute(self, variable, list, number, enviroment):
         if isinstance(list[number].id,CallNative):
-            callNativeFunction = Native(Handler(variable.typeVar,variable.value,variable.typeSingle),list[number].id)
+            callNativeFunction = Native(Handler(variable.typeVar,variable.value,variable.typeSingle),list[number].id,self.row,self.column)
             return callNativeFunction.executeInstruction(enviroment)
         else:
             if list[number].id in variable.value:
@@ -49,8 +53,8 @@ class AttAccess():
                     else:
                         return self.foundAttribute(Retorno(typeVar,value[1],typeSingle), list, number+1, enviroment)
                 else:
-                    print("Error: El atributo",list[number].id,"de la instrucción no es público")
+                    listError.append(Error("Error: El atributo "+str(list[number].id)+" de la instrucción no es público","Local",self.row,self.column,"SEMANTICO"))
                     return None
             else:
-                print("Error: Atributo",list[number].id,"no encontrado de la variable",list[0].id.id) 
+                listError.append(Error("Error: Atributo "+str(list[number].id)+" no encontrado de la variable "+str(list[0].id.id),"Local",self.row,self.column,"SEMANTICO"))
                 return None

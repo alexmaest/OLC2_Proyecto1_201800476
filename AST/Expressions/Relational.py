@@ -1,4 +1,6 @@
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 from enum import Enum
 
 class TYPE_RELATIONAL(Enum):
@@ -10,10 +12,12 @@ class TYPE_RELATIONAL(Enum):
     MENORI = 5
 
 class Relational():
-    def __init__(self, lExp, type, rExp):
+    def __init__(self, lExp, type, rExp, row, column):
         self.lExp = lExp
         self.type = type
         self.rExp = rExp
+        self.row = row
+        self.column = column
     
     def executeInstruction(self, enviroment):
         leftValue = self.lExp.executeInstruction(enviroment)
@@ -38,8 +42,8 @@ class Relational():
                 result = leftValue.value <= rightValue.value
                 return Retorno(TYPE_DECLARATION.BOOLEAN, result, TYPE_DECLARATION.SIMPLE)
             else:
-                print("Error: No se ha podido realizar la comparación")
+                listError.append(Error("Error: No se ha podido realizar la comparación","Local",self.row,self.column,"SEMANTICO"))
                 return None
         else:
-            print("Error: No se ha podido realizar la comparación")
+            listError.append(Error("Error: No se ha podido realizar la comparación","Local",self.row,self.column,"SEMANTICO"))
             return None

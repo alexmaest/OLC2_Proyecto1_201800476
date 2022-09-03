@@ -1,5 +1,5 @@
 from AST.Symbol.Symbol import Symbol
-
+from AST.Symbol.SymbolList import listModules, listStructs, listFunctions, listVariables
 class Enviroment():
 
     variables = []
@@ -7,12 +7,13 @@ class Enviroment():
     structs = []
     functions = []
 
-    def __init__(self, previous):
+    def __init__(self, previous, console):
         self.previous = previous
         self.variables = []
         self.modules =  []
         self.structs =  []
         self.functions = []
+        self.console = console
 
     def saveVariable(self, variable):
         env = self
@@ -23,6 +24,7 @@ class Enviroment():
                     return
             env = env.previous
         self.variables.append(variable)
+        listVariables.append(variable)
         #print("Información: La Variable con id",variable.id,"fué agregada")
 
     def editVariable(self, id, value):
@@ -52,6 +54,7 @@ class Enviroment():
                     return False
             env = env.previous
         self.functions.append(function)
+        listFunctions.append(function)
         #print("Información: La Función con id",id,"fué agregada")
         return True
     
@@ -79,6 +82,7 @@ class Enviroment():
                     return False
             env = env.previous
         self.structs.append(struct)
+        listStructs.append(struct)
         #print("Información: El struct con id",id,"fué agregado")
         return True
 
@@ -100,6 +104,7 @@ class Enviroment():
                     return False
             env = env.previous
         self.modules.append(module)
+        listModules.append(module)
         #print("Información: El modulo con id",id,"fué agregado")
         return True
 

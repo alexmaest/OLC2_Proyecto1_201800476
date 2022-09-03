@@ -1,11 +1,15 @@
 from AST.Abstracts.Instruccion import Instruccion
 from AST.Expressions.AttAccess import AttAccess
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
 
 class Match(Instruccion):
-    def __init__(self, expression, statement):
+    def __init__(self, expression, statement, row, column):
         self.expression = expression
         self.statement = statement
+        self.row = row
+        self.column = column
 
     def executeInstruction(self, enviroment):
         singleExp = self.expression.executeInstruction(enviroment)
@@ -33,19 +37,18 @@ class Match(Instruccion):
                                 if returned != None:
                                     if singleExp.typeVar == returned.typeVar:
                                         if singleExp.typeSingle == returned.typeSingle:
-                                            print(singleExp.value,"=?",returned.value)
                                             if singleExp.value == returned.value:
                                                 executed = True
                                                 return arm.executeInstruction(enviroment)
                                             else: continue
                                         else:
-                                            print("Error: El valor que desea comparar no posee las dimensiones correctas")
+                                            listError.append(Error("Error: El valor que desea comparar no posee las dimensiones correctas","Local",self.row,self.column,"SEMANTICO"))
                                             break
                                     else:
-                                        print("Error: El valor que desea comparar no posee el tipo correcto")
+                                        listError.append(Error("Error: El valor que desea comparar no posee el tipo correcto","Local",self.row,self.column,"SEMANTICO"))
                                         break
                                 else:
-                                    print("Error: El valor del brazo es nulo")
+                                    listError.append(Error("Error: El valor del brazo es nulo","Local",self.row,self.column,"SEMANTICO"))
                                     break
                         else:
                             returned = singleArmExp.executeInstruction(enviroment)
@@ -57,15 +60,15 @@ class Match(Instruccion):
                                             return arm.executeInstruction(enviroment)
                                         else: continue
                                     else:
-                                        print("Error: El valor que desea comparar no posee las dimensiones correctas")
+                                        listError.append(Error("Error: El valor que desea comparar no posee las dimensiones correctas","Local",self.row,self.column,"SEMANTICO"))
                                         break
                                 else:
-                                    print("Error: El valor que desea comparar no posee el tipo correcto")
+                                    listError.append(Error("Error: El valor que desea comparar no posee el tipo correcto","Local",self.row,self.column,"SEMANTICO"))
                                     break
                             else:
-                                print("Error: El valor del brazo es nulo")
+                                listError.append(Error("Error: El valor del brazo es nulo","Local",self.row,self.column,"SEMANTICO"))
                                 break
             else:
-                print("Error: El brazo '_' debe de ser el último de la sentencia match")
+                listError.append(Error("Error: El brazo '_' debe de ser el último de la sentencia match","Local",self.row,self.column,"SEMANTICO"))
         else:
-            print("Error: No se ha podido ejecutar la sentencia match porque su valor a comparar es nulo")
+            listError.append(Error("Error: No se ha podido ejecutar la sentencia match porque su valor a comparar es nulo","Local",self.row,self.column,"SEMANTICO"))

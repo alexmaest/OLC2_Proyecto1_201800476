@@ -2,12 +2,16 @@ from AST.Abstracts.Instruccion import Instruccion
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
 from AST.Symbol.Enviroment import Enviroment
 from AST.Expressions.CallNative import CallNative, TYPE_NATIVE
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 import math
 
 class Native(Instruccion):
-    def __init__(self, value, function):
+    def __init__(self, value, function, row, column):
         self.value = value
         self.function = function
+        self.row = row
+        self.column = column
 
     def executeInstruction(self, enviroment):
         returnedValue = self.value.executeInstruction(enviroment)
@@ -18,20 +22,20 @@ class Native(Instruccion):
                     if returnedValue.typeVar == TYPE_DECLARATION.STRING or returnedValue.typeVar == TYPE_DECLARATION.aSTRING:
                         return Retorno(TYPE_DECLARATION.STRING,returnedValue.value,TYPE_DECLARATION.SIMPLE)
                     else:
-                        print("Error: La función to_string() solo funciona con variables tipo String o &str")
+                        listError.append(Error("Error: La función to_string() solo funciona con variables tipo String o &str","Local",self.row,self.column,"SEMANTICO"))
                         return Retorno(TYPE_DECLARATION.NULL,None,TYPE_DECLARATION.SIMPLE)
                 else:
-                    print("Error: La función to_string() solo funciona con variables tipo String o &str, no con arreglos ni vectores")
+                    listError.append(Error("Error: La función to_string() solo funciona con variables tipo String o &str, no con arreglos ni vectores","Local",self.row,self.column,"SEMANTICO"))
                     return Retorno(TYPE_DECLARATION.NULL,None,TYPE_DECLARATION.SIMPLE)
             elif function.typeVar == TYPE_NATIVE.TO_OWNED:
                 if returnedValue.typeSingle == TYPE_DECLARATION.SIMPLE:
                     if returnedValue.typeVar == TYPE_DECLARATION.STRING or returnedValue.typeVar == TYPE_DECLARATION.aSTRING:
                         return Retorno(TYPE_DECLARATION.STRING,returnedValue.value,TYPE_DECLARATION.SIMPLE)
                     else:
-                        print("Error: La función to_owned() solo funciona con variables tipo String o &str")
+                        listError.append(Error("Error: La función to_owned() solo funciona con variables tipo String o &str","Local",self.row,self.column,"SEMANTICO"))
                         return None
                 else:
-                    print("Error: La función to_owned() solo funciona con variables tipo String o &str, no con arreglos ni vectores")
+                    listError.append(Error("Error: La función to_owned() solo funciona con variables tipo String o &str, no con arreglos ni vectores","Local",self.row,self.column,"SEMANTICO"))
                     return None
             elif function.typeVar == TYPE_NATIVE.CLONE:
                 return Retorno(returnedValue.typeVar,returnedValue.value,returnedValue.typeSingle)
@@ -41,13 +45,13 @@ class Native(Instruccion):
                 elif returnedValue.typeSingle == TYPE_DECLARATION.ARRAY:
                     return Retorno(TYPE_DECLARATION.INTEGER,len(returnedValue.value),TYPE_DECLARATION.SIMPLE)
                 else: 
-                    print("Error: La función len() solo funciona con vectores o arreglos")
+                    listError.append(Error("Error: La función len() solo funciona con vectores o arreglos","Local",self.row,self.column,"SEMANTICO"))
                     return None
             elif function.typeVar == TYPE_NATIVE.CAPACITY:
                 if returnedValue.typeSingle == TYPE_DECLARATION.VECTOR:
                     return Retorno(TYPE_DECLARATION.INTEGER,returnedValue.value[0],TYPE_DECLARATION.SIMPLE)
                 else: 
-                    print("Error: La función capacity() solo funciona con vectores")
+                    listError.append(Error("Error: La función capacity() solo funciona con vectores","Local",self.row,self.column,"SEMANTICO"))
                     return None
             elif function.typeVar == TYPE_NATIVE.REMOVE:
                 if returnedValue.typeSingle == TYPE_DECLARATION.VECTOR:
@@ -57,10 +61,10 @@ class Native(Instruccion):
                         del returnedValue.value[1][indexValue.value]
                         return Retorno(TYPE_DECLARATION.INTEGER,saveValue.value,TYPE_DECLARATION.SIMPLE)
                     else:
-                        print("Error: El indice de la función remove() es nulo")
+                        listError.append(Error("Error: El indice de la función remove() es nulo","Local",self.row,self.column,"SEMANTICO"))
                         return None
                 else: 
-                    print("Error: La función remove() solo funciona con vectores")
+                    listError.append(Error("Error: La función remove() solo funciona con vectores","Local",self.row,self.column,"SEMANTICO"))
                     return None
             elif function.typeVar == TYPE_NATIVE.CONTAINS:
                 if returnedValue.typeSingle == TYPE_DECLARATION.VECTOR:
@@ -76,7 +80,7 @@ class Native(Instruccion):
                             Found = True
                     return Retorno(TYPE_DECLARATION.BOOLEAN,Found,TYPE_DECLARATION.SIMPLE)
                 else: 
-                    print("Error: La función contains() solo funciona con vectores y arrays")
+                    listError.append(Error("Error: La función contains() solo funciona con vectores y arrays","Local",self.row,self.column,"SEMANTICO"))
                     return None
             elif function.typeVar == TYPE_NATIVE.PUSH:
                 if returnedValue.typeSingle == TYPE_DECLARATION.VECTOR:
@@ -88,13 +92,13 @@ class Native(Instruccion):
                                     returnedValue.value[0] = returnedValue.value[0] * 2
                             return Retorno(returnedValue.typeVar,returnedValue.value,TYPE_DECLARATION.VECTOR)
                         else:
-                            print("Error: El elemento que desea agregar a la lista no posee el mismo tipo de esta")
+                            listError.append(Error("Error: El elemento que desea agregar a la lista no posee el mismo tipo de esta","Local",self.row,self.column,"SEMANTICO"))
                             return None
                     else:
-                        print("Error: El indice de la función push() es nulo")
+                        listError.append(Error("Error: El indice de la función push() es nulo","Local",self.row,self.column,"SEMANTICO"))
                         return None
                 else: 
-                    print("Error: La función push() solo funciona con vectores")
+                    listError.append(Error("Error: La función push() solo funciona con vectores","Local",self.row,self.column,"SEMANTICO"))
                     return None
             elif function.typeVar == TYPE_NATIVE.INSERT:
                 if returnedValue.typeSingle == TYPE_DECLARATION.VECTOR:
@@ -108,16 +112,16 @@ class Native(Instruccion):
                                     returnedValue.value[0] = returnedValue.value[0] * 2
                                 return Retorno(returnedValue.typeVar,returnedValue.value,TYPE_DECLARATION.VECTOR)
                             else:
-                                print("Error: El indice de la función insert() no es un entero")
+                                listError.append(Error("Error: El indice de la función insert() no es un entero","Local",self.row,self.column,"SEMANTICO"))
                                 return None
                         else:
-                            print("Error: Uno o ambos indices de la función insert() son nulos")
+                            listError.append(Error("Error: Uno o ambos indices de la función insert() son nulos","Local",self.row,self.column,"SEMANTICO"))
                             return None
                     else:
-                        print("Error: La función insert() tiene la cantidad de parametros incorrectos")
+                        listError.append(Error("Error: La función insert() tiene la cantidad de parametros incorrectos","Local",self.row,self.column,"SEMANTICO"))
                         return None
                 else: 
-                    print("Error: La función insert() solo funciona con vectores")
+                    listError.append(Error("Error: La función insert() solo funciona con vectores","Local",self.row,self.column,"SEMANTICO"))
                     return None
             elif function.typeVar == TYPE_NATIVE.CHARS:
                 if returnedValue.typeVar == TYPE_DECLARATION.STRING or returnedValue.typeVar == TYPE_DECLARATION.aSTRING: 
@@ -125,10 +129,10 @@ class Native(Instruccion):
                         charArray = [char for char in returnedValue.value] 
                         return Retorno(returnedValue.typeVar,charArray,TYPE_DECLARATION.ARRAY)
                     else:
-                        print("Error: La función chars() solo se puede ejecutar con cadenas")
+                        listError.append(Error("Error: La función chars() solo se puede ejecutar con cadenas","Local",self.row,self.column,"SEMANTICO"))
                         return None
                 else:
-                    print("Error: La función chars() solo se puede ejecutar con cadenas")
+                    listError.append(Error("Error: La función chars() solo se puede ejecutar con cadenas","Local",self.row,self.column,"SEMANTICO"))
                     return None
             elif function.typeVar == TYPE_NATIVE.SQRT:
                 if returnedValue.typeSingle == TYPE_DECLARATION.SIMPLE:
@@ -139,20 +143,20 @@ class Native(Instruccion):
                         singleValue = math.sqrt(returnedValue.value)
                         return Retorno(returnedValue.typeVar,float(singleValue),TYPE_DECLARATION.SIMPLE)
                     else:
-                        print("Error: La función sqtr() solo se puede ejecutar con números")
+                        listError.append(Error("Error: La función sqtr() solo se puede ejecutar con números","Local",self.row,self.column,"SEMANTICO"))
                         return None
                 else:
-                    print("Error: La función sqtr() solo se puede ejecutar con números")
+                    listError.append(Error("Error: La función sqtr() solo se puede ejecutar con números","Local",self.row,self.column,"SEMANTICO"))
                     return None
             elif function.typeVar == TYPE_NATIVE.ABS:
                 if returnedValue.typeVar == TYPE_DECLARATION.INTEGER or returnedValue.typeVar == TYPE_DECLARATION.FLOAT: 
                     if returnedValue.typeSingle == TYPE_DECLARATION.SIMPLE:
                         return Retorno(returnedValue.typeVar,abs(returnedValue.value),TYPE_DECLARATION.SIMPLE)
                     else:
-                        print("Error: La función abs() solo se puede ejecutar con números")
+                        listError.append(Error("Error: La función abs() solo se puede ejecutar con números","Local",self.row,self.column,"SEMANTICO"))
                         return None
                 else:
-                    print("Error: La función abs() solo se puede ejecutar con números")
+                    listError.append(Error("Error: La función abs() solo se puede ejecutar con números","Local",self.row,self.column,"SEMANTICO"))
                     return None
             elif function.typeVar == TYPE_NATIVE.NEW:
                 return Retorno(None,10,TYPE_DECLARATION.VECTOR)
@@ -160,5 +164,5 @@ class Native(Instruccion):
                 #WITH_CAPACITY
                 return Retorno(None,function.value,TYPE_DECLARATION.VECTOR)
         else:
-            print("Error: No se ha podido ejecutar la función nativa")
+            listError.append(Error("Error: No se ha podido ejecutar la función nativa","Local",self.row,self.column,"SEMANTICO"))
             return None

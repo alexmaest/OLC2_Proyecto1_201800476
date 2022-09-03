@@ -144,7 +144,7 @@ def t_COMENTARIO_G(t):
     r'\/\*[^\/]*\*\/'
     t.lexer.lineno += 1
 
-t_ignore = " \t\n\r"
+t_ignore = " \t\r"
 
 def t_newline(t):
     r'\n+'

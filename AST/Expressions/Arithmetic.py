@@ -1,6 +1,8 @@
 from enum import Enum
 from AST.Abstracts.Expression import Expression
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 
 class TYPE_OPERATION(Enum):
     SUMA = 1,
@@ -20,11 +22,13 @@ class TYPE_OPERATION(Enum):
 
 class Arithmetic():
 
-    def __init__(self, lExp, type, rExp, single):
+    def __init__(self, lExp, type, rExp, single, row, column):
         self.lExp = lExp
         self.type = type
         self.rExp = rExp
         self.single = single
+        self.row = row
+        self.column = column
 
     SUMA = [
         [TYPE_DECLARATION.INTEGER, TYPE_DECLARATION.NULL, TYPE_DECLARATION.NULL, TYPE_DECLARATION.NULL, TYPE_DECLARATION.NULL, TYPE_DECLARATION.NULL, TYPE_DECLARATION.USIZE, TYPE_DECLARATION.NULL],
@@ -70,7 +74,7 @@ class Arithmetic():
                 elif typeResult == TYPE_DECLARATION.STRING:
                     return Retorno(typeResult, str(lReturn.value) + str(rReturn.value), TYPE_DECLARATION.SIMPLE)
                 else:
-                    print(f"Error: No se puede operar {lReturn.typeVar} con {rReturn.typeVar}")
+                    listError.append(Error("Error: No se puede operar "+str(lReturn.typeVar)+" con "+str(rReturn.typeVar),"Local",self.row,self.column,"SEMANTICO"))
                     return None
 
             elif self.type == TYPE_OPERATION.RESTA:
@@ -83,7 +87,7 @@ class Arithmetic():
                     elif typeResult == TYPE_DECLARATION.FLOAT:
                         return Retorno(typeResult, lReturn.value - rReturn.value, TYPE_DECLARATION.SIMPLE)
                     else:
-                        print(f"Error: No se puede operar {lReturn.typeVar} con {rReturn.typeVar}")
+                        listError.append(Error("Error: No se puede operar "+str(lReturn.typeVar)+" con "+str(rReturn.typeVar),"Local",self.row,self.column,"SEMANTICO"))
                         return None
             
             elif self.type == TYPE_OPERATION.MULTIPLICACION:
@@ -93,7 +97,7 @@ class Arithmetic():
                 elif typeResult == TYPE_DECLARATION.FLOAT:
                     return Retorno(typeResult, lReturn.value * rReturn.value, TYPE_DECLARATION.SIMPLE)
                 else:
-                    print(f"Error: No se puede operar {lReturn.typeVar} con {rReturn.typeVar}")
+                    listError.append(Error("Error: No se puede operar "+str(lReturn.typeVar)+" con "+str(rReturn.typeVar),"Local",self.row,self.column,"SEMANTICO"))
                     return None
             
             elif self.type == TYPE_OPERATION.DIVISION:
@@ -102,16 +106,16 @@ class Arithmetic():
                     if rReturn.value != 0:
                         return Retorno(typeResult, int(lReturn.value / rReturn.value), TYPE_DECLARATION.SIMPLE)
                     else:
-                        print("Error: No se puede dividir entre cero")
+                        listError.append(Error("Error: No se puede dividir entre cero","Local",self.row,self.column,"SEMANTICO"))
                         return None
                 elif typeResult == TYPE_DECLARATION.FLOAT:
                     if rReturn.value != 0.0:
                         return Retorno(typeResult, float(lReturn.value / rReturn.value), TYPE_DECLARATION.SIMPLE)
                     else:
-                        print("Error: No se puede dividir entre cero")
+                        listError.append(Error("Error: No se puede dividir entre cero","Local",self.row,self.column,"SEMANTICO"))
                         return None
                 else:
-                    print(f"Error: No se puede operar {lReturn.typeVar} con {rReturn.typeVar}")
+                    listError.append(Error("Error: No se puede operar "+str(lReturn.typeVar)+" con "+str(rReturn.typeVar),"Local",self.row,self.column,"SEMANTICO"))
                     return None
           
             else:
@@ -121,7 +125,7 @@ class Arithmetic():
                 elif lReturn.typeVar == TYPE_DECLARATION.FLOAT and rReturn.typeVar == TYPE_DECLARATION.FLOAT:
                     return Retorno(TYPE_DECLARATION.FLOAT, lReturn.value % rReturn.value, TYPE_DECLARATION.SIMPLE)
                 else:
-                    print(f"Error: No se puede realizar la operación modulo con {lReturn.typeVar} y {rReturn.typeVar}")
+                    listError.append(Error(f"Error: No se puede realizar la operación modulo con "+str(lReturn.typeVar)+" y "+str(rReturn.typeVar),"Local",self.row,self.column,"SEMANTICO"))
                     return None
         else:
             return None

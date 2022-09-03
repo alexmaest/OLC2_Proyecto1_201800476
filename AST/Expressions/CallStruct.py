@@ -5,12 +5,16 @@ from AST.Expressions.Access import Access
 from AST.Expressions.ParamReference import ParamReference
 from AST.Instructions.DeclarationSingle import DeclarationSingle
 from AST.Symbol.Enviroment import Enviroment
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 
 class CallStruct():
-    def __init__(self, id, parameters):
+    def __init__(self, id, parameters, row, column):
         self.id = id
         self.parameters = parameters
         self.content = {}
+        self.row = row
+        self.column = column
 
     def executeInstruction(self,enviroment):
         #Buscar struct
@@ -30,15 +34,15 @@ class CallStruct():
                                 content.append(callExp.value)
                                 self.content[self.parameters[param].id] = Retorno(callExp.typeVar,content,callExp.typeSingle)
                             else:
-                                print("Error: El parámetro no coincide con el tipo de dato declarado en el struct",self.id.idList[0])
+                                listError.append(Error("Error: El parámetro no coincide con el tipo de dato declarado en el struct "+str(self.id.idList[0]),"Local",self.row,self.column,"SEMANTICO"))
                                 return None
                         else:
-                            print("Error: El parámetro o tipo que ha ingresado en el struct",self.id.idList[0],"es nulo")
+                            listError.append(Error("Error: El parámetro o tipo que ha ingresado en el struct "+str(self.id.idList[0])+"es nulo","Local",self.row,self.column,"SEMANTICO"))
                             return None
                     else:
-                        print("Error: No coincide el parámetro \'",self.parameters[param].id,"\' para el struct",self.id.idList[0])
+                        listError.append(Error("Error: No coincide el parámetro \'"+str(self.parameters[param].id)+"\' para el struct "+str(self.id.idList[0]),"Local",self.row,self.column,"SEMANTICO"))
                         return None
                 return Retorno(self.id.idList[-1],self.content,TYPE_DECLARATION.STRUCT)
             else:
-                print("Error: El número de atributos del struct",self.id,"no es el correcto")
+                listError.append(Error("Error: El número de atributos del struct "+str(self.id)+"no es el correcto","Local",self.row,self.column,"SEMANTICO"))
                 return None

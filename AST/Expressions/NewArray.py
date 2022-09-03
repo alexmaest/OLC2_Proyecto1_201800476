@@ -1,12 +1,16 @@
 from AST.Abstracts.Expression import Expression
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 
 class NewArray():
 
     finalArray = []
 
-    def __init__(self, listExp):
+    def __init__(self, listExp, row, column):
         self.listExp = listExp
+        self.row = row
+        self.column = column
         self.finalArray = []
 
     def executeInstruction(self,enviroment):
@@ -30,15 +34,15 @@ class NewArray():
                                 if lenDimension == len(exp.value):
                                     self.finalArray.append(exp)
                                 else:
-                                    print("Error: No se ha podido crear la lista debido a que todas las expresiones no son de la misma longitud")    
+                                    listError.append(Error("Error: No se ha podido crear la lista debido a que todas las expresiones no son de la misma longitud","Local",self.row,self.column,"SEMANTICO"))    
                                     return None
                             else:
                                 self.finalArray.append(exp)
                         else:
-                            print("Error: No se ha podido crear la lista debido a que todas las expresiones no son de la misma dimensión")    
+                            listError.append(Error("Error: No se ha podido crear la lista debido a que todas las expresiones no son de la misma dimensión","Local",self.row,self.column,"SEMANTICO"))    
                             return None
                     else:
-                        print("Error: No se ha podido crear la lista debido a que todas las expresiones no son del mismo tipo")    
+                        listError.append(Error("Error: No se ha podido crear la lista debido a que todas las expresiones no son del mismo tipo","Local",self.row,self.column,"SEMANTICO"))    
                         return None
             else:
                 return None

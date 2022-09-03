@@ -100,7 +100,7 @@ def p_instruccion_l(t):
     | transferencia
     | transferencia PCOMA'''
     if len(t.slice) > 2:
-        if t.slice[2].type == 'PUNTO': t[0] = Native(Access(t[1]),t[3])
+        if t.slice[2].type == 'PUNTO': t[0] = Native(Access(t[1],t.lineno(1), t.lexpos(1)),t[3],t.lineno(1), t.lexpos(1))
         else: t[0] = t[1]
     else: t[0] = t[1]
 
@@ -110,15 +110,15 @@ def p_funcion(t):
     | FN ID LPAR RPAR ARROW tipo_var statement
     | FN ID LPAR RPAR statement'''
     if t.slice[4].type == 'lista_parametros':
-        if t.slice[6].type == 'ARROW': t[0] = Function(t[2],t[4],t[7],t[8])
-        else: t[0] = Function(t[2],t[4],None,t[6])
+        if t.slice[6].type == 'ARROW': t[0] = Function(t[2],t[4],t[7],t[8],t.lineno(1), t.lexpos(1))
+        else: t[0] = Function(t[2],t[4],None,t[6],t.lineno(1), t.lexpos(1))
     else:
-        if t.slice[5].type == 'ARROW': t[0] = Function(t[2],[],t[6],t[7])
-        else: t[0] = Function(t[2],[],None,t[5])
+        if t.slice[5].type == 'ARROW': t[0] = Function(t[2],[],t[6],t[7],t.lineno(1), t.lexpos(1))
+        else: t[0] = Function(t[2],[],None,t[5],t.lineno(1), t.lexpos(1))
 
 def p_modulo(t):
     'modulo : MOD ID mod_statement'
-    t[0] = Modulo(t[2],t[3])
+    t[0] = Modulo(t[2],t[3],t.lineno(1), t.lexpos(1))
 
 def p_mod_statement(t):
     '''mod_statement : LLLAV instrucciones_mod RLLAV
@@ -147,8 +147,8 @@ def p_instruccion_mod(t):
 def p_struct(t):
     '''struct : STRUCT ID LLLAV lista_var RLLAV
     | STRUCT ID LLLAV RLLAV'''
-    if t.slice[4].type == 'lista_var': t[0] = Struct(t[2],t[4])
-    else: t[0] = Struct(t[2],[])
+    if t.slice[4].type == 'lista_var': t[0] = Struct(t[2],t[4],t.lineno(1), t.lexpos(1))
+    else: t[0] = Struct(t[2],[],t.lineno(1), t.lexpos(1))
 
 def p_sentencia(t):
     '''sentencia : if
@@ -160,7 +160,7 @@ def p_sentencia(t):
 
 def p_if(t):
     'if : IF exp statement else'
-    t[0] = If(t[2],t[3],t[4])
+    t[0] = If(t[2],t[3],t[4],t.lineno(1), t.lexpos(1))
 
 def p_else(t):
     '''else : ELSE statement
@@ -174,7 +174,7 @@ def p_epsilon(t):
 
 def p_match(t):
     'match : MATCH exp match_statement'
-    t[0] = Match(t[2],t[3])
+    t[0] = Match(t[2],t[3],t.lineno(1), t.lexpos(1))
 
 def p_match_statement(t):
     '''match_statement : LLLAV lista_brazos RLLAV
@@ -218,11 +218,11 @@ def p_loop(t):
 
 def p_while(t):
     'while : WHILE exp statement'
-    t[0] = While(t[2],t[3])
+    t[0] = While(t[2],t[3],t.lineno(1), t.lexpos(1))
 
 def p_for(t):
     'for : FOR ID IN foriterative statement'
-    t[0] = For(t[2],t[4],t[5])
+    t[0] = For(t[2],t[4],t[5],t.lineno(1), t.lexpos(1))
 
 def p_foriterative(t):
     '''foriterative : exp PUNTO PUNTO exp
@@ -241,11 +241,11 @@ def p_transferencia(t):
     | auxexp'''
     if t.slice[1].type == 'CONTINUE': t[0] = Continue()
     elif t.slice[1].type == 'BREAK':
-        if len(t.slice) > 2: t[0] = Break(t[2])
-        else: t[0] = Break(None)
+        if len(t.slice) > 2: t[0] = Break(t[2],t.lineno(1), t.lexpos(1))
+        else: t[0] = Break(None,t.lineno(1), t.lexpos(1))
     elif t.slice[1].type == 'RETURN':
-        if len(t.slice) > 2: t[0] = Return(t[2])
-        else: t[0] = Return(None)
+        if len(t.slice) > 2: t[0] = Return(t[2],t.lineno(1), t.lexpos(1))
+        else: t[0] = Return(None,t.lineno(1), t.lexpos(1))
     else: t[0] = t[1]
 
 def p_statement(t):
@@ -282,27 +282,27 @@ def p_declaracion(t):
     '''declaracion : LET asignacion_simple IGUAL auxexp
     | LET MUT asignacion
     | LET asignacion'''
-    if t.slice[2].type == 'asignacion_simple': t[0] = DeclarationSingle(t[2],t[4])
-    elif t.slice[2].type == 'MUT': t[0] = Declaration(True,t[3])
-    else: t[0] = Declaration(False,t[2])
+    if t.slice[2].type == 'asignacion_simple': t[0] = DeclarationSingle(t[2],t[4],t.lineno(1), t.lexpos(1))
+    elif t.slice[2].type == 'MUT': t[0] = Declaration(True,t[3],t.lineno(1), t.lexpos(1))
+    else: t[0] = Declaration(False,t[2],t.lineno(1), t.lexpos(1))
 
 def p_asignacion(t):
     '''asignacion : ID IGUAL auxexp
     | ID lista_assign2 IGUAL auxexp
     | ID lista_arr IGUAL auxexp
     | ID lista_arr lista_assign2 IGUAL auxexp'''
-    if t.slice[2].type == 'IGUAL': t[0] = Assignment([AttAssign(Access(t[1]))],t[3])
+    if t.slice[2].type == 'IGUAL': t[0] = Assignment([AttAssign(Access(t[1],t.lineno(1), t.lexpos(1)))],t[3],t.lineno(1), t.lexpos(1))
     else: 
         if t.slice[3].type == 'IGUAL': 
             if t.slice[2].type == 'lista_assign2': 
                 single = []
-                single.append(AttAssign(Access(t[1])))
+                single.append(AttAssign(Access(t[1],t.lineno(1), t.lexpos(1))))
                 for valor in t[2]:
                     single.append(valor)
-                t[0] = Assignment(single,t[4])
+                t[0] = Assignment(single,t[4],t.lineno(1), t.lexpos(1))
             else:
-                t[0] = AssignmentAccessArray(AccessArray(Access(t[1]),t[2]),t[4],None)
-        else: t[0] = AssignmentAccessArray(AccessArray(Access(t[1]),t[2]),t[5],t[3])
+                t[0] = AssignmentAccessArray(AccessArray(Access(t[1],t.lineno(1), t.lexpos(1)),t[2],t.lineno(1), t.lexpos(1)),t[4],None,t.lineno(1), t.lexpos(1))
+        else: t[0] = AssignmentAccessArray(AccessArray(Access(t[1],t.lineno(1), t.lexpos(1)),t[2],t.lineno(1), t.lexpos(1)),t[5],t[3],t.lineno(1), t.lexpos(1))
 
 def p_lista_assign2(t):
     '''lista_assign2 : lista_assign2 PUNTO ID
@@ -318,7 +318,7 @@ def p_lista_assign(t):
     if t.slice[1].type == 'lista_assign':
         t[1].append(AttAssign(t[3]))
         t[0] = t[1]
-    else: t[0] = [AttAssign(Access(t[1]))]
+    else: t[0] = [AttAssign(Access(t[1],t.lineno(1), t.lexpos(1)))]
 
 def p_lista_acc(t):
     '''lista_acc : lista_acc PUNTO ID
@@ -327,7 +327,7 @@ def p_lista_acc(t):
     if t.slice[1].type == 'lista_acc':
         t[1].append(AttAssign(t[3]))
         t[0] = t[1]
-    else: t[0] = [AttAssign(Access(t[1]))]
+    else: t[0] = [AttAssign(Access(t[1],t.lineno(1), t.lexpos(1)))]
 
 def p_auxacc(t):
     '''auxacc : exparr
@@ -401,13 +401,13 @@ def p_exp(t):
     elif t.slice[1].type == 'exparam': t[0] = t[1]
     elif t.slice[1].type == 'exppow': t[0] = t[1]
     elif t.slice[1].type == 'expcast': t[0] = t[1]
-    elif t.slice[1].type == 'lista_acc': t[0] = AttAccess(t[1])
+    elif t.slice[1].type == 'lista_acc': t[0] = AttAccess(t[1],t.lineno(1), t.lexpos(1))
     elif t.slice[1].type == 'llamada': t[0] = t[1]
     elif t.slice[1].type == 'sentencia': t[0] = t[1]
     elif t.slice[1].type == 'valores': t[0] = t[1]
     elif t.slice[1].type == 'exp':
         if len(t.slice) > 2:
-            if t.slice[2].type == 'PUNTO': t[0] = Native(t[1],t[3])
+            if t.slice[2].type == 'PUNTO': t[0] = Native(t[1],t[3],t.lineno(1), t.lexpos(1))
             else: t[0] = t[1]
         else: t[0] = t[1]
 
@@ -418,32 +418,32 @@ def p_expmath(t):
     | exp DIVISION exp
     | exp MODULO exp
     | MENOS exp %prec UMENOS"""
-    if t.slice[1].type == 'MENOS': t[0] = Arithmetic(t[2], TYPE_OPERATION.RESTA, None, True)
+    if t.slice[1].type == 'MENOS': t[0] = Arithmetic(t[2], TYPE_OPERATION.RESTA, None, True,t.lineno(1), t.lexpos(1))
     else:
-        if t.slice[2].type == 'MAS': t[0] = Arithmetic(t[1], TYPE_OPERATION.SUMA, t[3], False)
-        elif t.slice[2].type == 'MENOS': t[0] = Arithmetic(t[1], TYPE_OPERATION.RESTA, t[3], False)
-        elif t.slice[2].type == 'MULTIPLICACION': t[0] = Arithmetic(t[1], TYPE_OPERATION.MULTIPLICACION, t[3], False)
-        elif t.slice[2].type == 'MODULO': t[0] = Arithmetic(t[1], TYPE_OPERATION.MODULO, t[3], False)
-        else: t[0] = Arithmetic(t[1], TYPE_OPERATION.DIVISION, t[3], False)
+        if t.slice[2].type == 'MAS': t[0] = Arithmetic(t[1], TYPE_OPERATION.SUMA, t[3], False,t.lineno(1), t.lexpos(1))
+        elif t.slice[2].type == 'MENOS': t[0] = Arithmetic(t[1], TYPE_OPERATION.RESTA, t[3], False,t.lineno(1), t.lexpos(1))
+        elif t.slice[2].type == 'MULTIPLICACION': t[0] = Arithmetic(t[1], TYPE_OPERATION.MULTIPLICACION, t[3], False,t.lineno(1), t.lexpos(1))
+        elif t.slice[2].type == 'MODULO': t[0] = Arithmetic(t[1], TYPE_OPERATION.MODULO, t[3], False,t.lineno(1), t.lexpos(1))
+        else: t[0] = Arithmetic(t[1], TYPE_OPERATION.DIVISION, t[3], False,t.lineno(1), t.lexpos(1))
 
 def p_exppow(t):
     '''exppow : I64 DPUNTOS DPUNTOS POW LPAR exp COMA exp RPAR
     | F64 DPUNTOS DPUNTOS POWF LPAR exp COMA exp RPAR'''
-    if t.slice[1].type == 'I64': t[0] = ArithmeticPow(True,t[6],t[8])
-    else: t[0] = ArithmeticPow(False,t[6],t[8])
+    if t.slice[1].type == 'I64': t[0] = ArithmeticPow(True,t[6],t[8],t.lineno(1), t.lexpos(1))
+    else: t[0] = ArithmeticPow(False,t[6],t[8],t.lineno(1), t.lexpos(1))
 
 def p_explog(t):
     '''expop : exp AND exp
     | exp OR exp
     | AD exp'''
-    if t.slice[1].type == 'AD': t[0] = Logic(t[2], TYPE_LOGICAL.NOT, Handler(TYPE_DECLARATION.BOOLEAN,False,TYPE_DECLARATION.SIMPLE))
+    if t.slice[1].type == 'AD': t[0] = Logic(t[2], TYPE_LOGICAL.NOT, Handler(TYPE_DECLARATION.BOOLEAN,False,TYPE_DECLARATION.SIMPLE),t.lineno(1), t.lexpos(1))
     else:
-        if t.slice[2].type == 'AND': t[0] = Logic(t[1], TYPE_LOGICAL.AND, t[3])
-        else: t[0] = Logic(t[1], TYPE_LOGICAL.OR, t[3])
+        if t.slice[2].type == 'AND': t[0] = Logic(t[1], TYPE_LOGICAL.AND, t[3],t.lineno(1), t.lexpos(1))
+        else: t[0] = Logic(t[1], TYPE_LOGICAL.OR, t[3],t.lineno(1), t.lexpos(1))
 
 def p_expcast(t):
     'expcast : exp AS tipo_var'
-    t[0] = Cast(t[1],t[3])
+    t[0] = Cast(t[1],t[3],t.lineno(1), t.lexpos(1))
 
 def p_exprel(t):
     '''exprel : exp IGUALI exp
@@ -452,21 +452,21 @@ def p_exprel(t):
     | exp MENOR exp
     | exp MAYORI exp
     | exp MENORI exp'''
-    if t.slice[2].type == 'IGUALI': t[0] = Relational(t[1],TYPE_RELATIONAL.IGUALI,t[3])
-    elif t.slice[2].type == 'DIF': t[0] = Relational(t[1],TYPE_RELATIONAL.DIF,t[3])
-    elif t.slice[2].type == 'MAYOR': t[0] = Relational(t[1],TYPE_RELATIONAL.MAYOR,t[3])
-    elif t.slice[2].type == 'MENOR': t[0] = Relational(t[1],TYPE_RELATIONAL.MENOR,t[3])
-    elif t.slice[2].type == 'MAYORI': t[0] = Relational(t[1],TYPE_RELATIONAL.MAYORI,t[3])
-    else: t[0] = Relational(t[1],TYPE_RELATIONAL.MENORI,t[3])
+    if t.slice[2].type == 'IGUALI': t[0] = Relational(t[1],TYPE_RELATIONAL.IGUALI,t[3],t.lineno(1), t.lexpos(1))
+    elif t.slice[2].type == 'DIF': t[0] = Relational(t[1],TYPE_RELATIONAL.DIF,t[3],t.lineno(1), t.lexpos(1))
+    elif t.slice[2].type == 'MAYOR': t[0] = Relational(t[1],TYPE_RELATIONAL.MAYOR,t[3],t.lineno(1), t.lexpos(1))
+    elif t.slice[2].type == 'MENOR': t[0] = Relational(t[1],TYPE_RELATIONAL.MENOR,t[3],t.lineno(1), t.lexpos(1))
+    elif t.slice[2].type == 'MAYORI': t[0] = Relational(t[1],TYPE_RELATIONAL.MAYORI,t[3],t.lineno(1), t.lexpos(1))
+    else: t[0] = Relational(t[1],TYPE_RELATIONAL.MENORI,t[3],t.lineno(1), t.lexpos(1))
 
 def p_expstruct(t):
     '''expstruct : lista_classtype LLLAV lista_att RLLAV
     | lista_classtype LLLAV RLLAV
     | lista_classtype DPUNTOS DPUNTOS llamada'''
-    if t.slice[3].type == 'lista_att': t[0] = CallStruct(AccessInstruction(t[1]),t[3])
+    if t.slice[3].type == 'lista_att': t[0] = CallStruct(AccessInstruction(t[1],t.lineno(1), t.lexpos(1)),t[3],t.lineno(1), t.lexpos(1))
     else:
-        if t.slice[2].type == 'LLLAV': t[0] = CallStruct(AccessInstruction(t[1]),[])
-        else: t[0] = ModAccess(t[1],t[4])
+        if t.slice[2].type == 'LLLAV': t[0] = CallStruct(AccessInstruction(t[1],t.lineno(1), t.lexpos(1)),[],t.lineno(1), t.lexpos(1))
+        else: t[0] = ModAccess(t[1],t[4],t.lineno(1), t.lexpos(1))
 
 def p_lista_struct(t):
     '''lista_att : lista_att COMA ID DPUNTOS auxexp
@@ -481,24 +481,24 @@ def p_exparam(t):
     | MUT valores
     | ANDSINGLE MUT ID
     | ANDSINGLE MUT valores'''
-    if t.slice[1].type == 'MUT': t[0] = ParamReference(True, Access(t[2]), False)
-    else: t[0] = ParamReference(True, Access(t[3]), True)
+    if t.slice[1].type == 'MUT': t[0] = ParamReference(True, Access(t[2],t.lineno(1), t.lexpos(1)), False)
+    else: t[0] = ParamReference(True, Access(t[3],t.lineno(1), t.lexpos(1)), True)
 
 def p_exparr(t):
     '''exparr : ID lista_arr'''
-    t[0] = AccessArray(Access(t[1]),t[2])
+    t[0] = AccessArray(Access(t[1],t.lineno(1), t.lexpos(1)),t[2],t.lineno(1), t.lexpos(1))
 
 def p_expvec(t):
     '''expvec : VEC AD newarray
     | VECTOR DPUNTOS DPUNTOS exp_natarr'''
     if t.slice[2].type == 'AD': t[0] = NewVector(t[3])
-    else: t[0] = NewVector(Native(Handler(None,None,None),t[4]))
+    else: t[0] = NewVector(Native(Handler(None,None,None),t[4],t.lineno(1), t.lexpos(1)))
 
 def p_newarray(t):
     '''newarray : LCOR lista_exp RCOR
     | LCOR auxexp PCOMA exp RCOR'''
-    if t.slice[2].type == 'lista_exp': t[0] = NewArray(t[2])
-    else: t[0] = NewDefaultArray(t[2],t[4])
+    if t.slice[2].type == 'lista_exp': t[0] = NewArray(t[2],t.lineno(1), t.lexpos(1))
+    else: t[0] = NewDefaultArray(t[2],t[4],t.lineno(1), t.lexpos(1))
 
 def p_valores(t):
     '''valores : ENTERO
@@ -532,14 +532,14 @@ def p_tipo_var(t):
     elif t.slice[1].type == 'BOOL' : t[0] = Literal(None,4)
     elif t.slice[1].type == 'CHAR' : t[0] = Literal(None,5)
     elif t.slice[1].type == 'USIZE' : t[0] = Literal(None,6)
-    elif t.slice[1].type == 'lista_classtype' : t[0] = AccessInstruction(t[1])
+    elif t.slice[1].type == 'lista_classtype' : t[0] = AccessInstruction(t[1],t.lineno(1), t.lexpos(1))
     elif t.slice[1].type == 'lista_arr2' : t[0] = t[1]
-    elif t.slice[1].type == 'LCOR' : t[0] = AccessTypeArray(t[2])
+    elif t.slice[1].type == 'LCOR' : t[0] = AccessTypeArray(t[2],t.lineno(1), t.lexpos(1))
     else: 
         if t.slice[3].type == 'tipo_var' :
             t[0] = AccessTypeVector(t[3])
         else:
-            t[0] = AccessTypeVector(AccessInstruction(t[3]))
+            t[0] = AccessTypeVector(AccessInstruction(t[3],t.lineno(1), t.lexpos(1)))
 
 def p_lista_classtype(t):
     '''lista_classtype : lista_classtype DPUNTOS DPUNTOS ID
@@ -553,8 +553,8 @@ def p_lista_classtype(t):
 def p_llamada(t):
     '''llamada : ID LPAR RPAR
     | ID LPAR lista_exp RPAR'''
-    if t.slice[3].type == 'RPAR': t[0] = CallFunction(t[1],[])
-    else: t[0] = CallFunction(t[1],t[3])
+    if t.slice[3].type == 'RPAR': t[0] = CallFunction(t[1],[],t.lineno(1), t.lexpos(1))
+    else: t[0] = CallFunction(t[1],t[3],t.lineno(1), t.lexpos(1))
 
 def p_exp_native(t):
     '''exp_native : TOSTRING LPAR RPAR
@@ -569,28 +569,28 @@ def p_exp_native(t):
     | CHARS LPAR RPAR
     | SQRT LPAR RPAR
     | ABS LPAR RPAR'''
-    if t.slice[1].type == 'TOSTRING': t[0] = CallNative(None,0)
-    elif t.slice[1].type == 'TOOWNED': t[0] = CallNative(None,1)
-    elif t.slice[1].type == 'CLONE': t[0] = CallNative(None,2)
-    elif t.slice[1].type == 'LEN': t[0] = CallNative(None,3)
-    elif t.slice[1].type == 'CAPACITY': t[0] = CallNative(None,4)
-    elif t.slice[1].type == 'REMOVE': t[0] = CallNative(t[3],5)
-    elif t.slice[1].type == 'CONTAINS': t[0] = CallNative(t[4],6)
-    elif t.slice[1].type == 'PUSH': t[0] = CallNative(t[3],7)
-    elif t.slice[1].type == 'INSERT': t[0] = CallNative(t[3],8)
-    elif t.slice[1].type == 'CHARS': t[0] = CallNative(None,9)
-    elif t.slice[1].type == 'SQRT': t[0] = CallNative(None,10)
-    else: t[0] = CallNative(None,11)
+    if t.slice[1].type == 'TOSTRING': t[0] = CallNative(None,0,t.lineno(1), t.lexpos(1))
+    elif t.slice[1].type == 'TOOWNED': t[0] = CallNative(None,1,t.lineno(1), t.lexpos(1))
+    elif t.slice[1].type == 'CLONE': t[0] = CallNative(None,2,t.lineno(1), t.lexpos(1))
+    elif t.slice[1].type == 'LEN': t[0] = CallNative(None,3,t.lineno(1), t.lexpos(1))
+    elif t.slice[1].type == 'CAPACITY': t[0] = CallNative(None,4,t.lineno(1), t.lexpos(1))
+    elif t.slice[1].type == 'REMOVE': t[0] = CallNative(t[3],5,t.lineno(1), t.lexpos(1))
+    elif t.slice[1].type == 'CONTAINS': t[0] = CallNative(t[4],6,t.lineno(1), t.lexpos(1))
+    elif t.slice[1].type == 'PUSH': t[0] = CallNative(t[3],7,t.lineno(1), t.lexpos(1))
+    elif t.slice[1].type == 'INSERT': t[0] = CallNative(t[3],8,t.lineno(1), t.lexpos(1))
+    elif t.slice[1].type == 'CHARS': t[0] = CallNative(None,9,t.lineno(1), t.lexpos(1))
+    elif t.slice[1].type == 'SQRT': t[0] = CallNative(None,10,t.lineno(1), t.lexpos(1))
+    else: t[0] = CallNative(None,11,t.lineno(1), t.lexpos(1))
 
 def p_exp_natarr(t):
     '''exp_natarr : NEW LPAR RPAR
     | WITHCAPACITY LPAR exp RPAR'''
-    if t.slice[1].type == 'NEW': t[0] = CallNative(None,12)
-    else: t[0] = CallNative(t[3],13)
+    if t.slice[1].type == 'NEW': t[0] = CallNative(None,12,t.lineno(1), t.lexpos(1))
+    else: t[0] = CallNative(t[3],13,t.lineno(1), t.lexpos(1))
 
 def p_print(t):
     'print : PRINT AD LPAR lista_exp RPAR'
-    t[0] = Print(t[4])
+    t[0] = Print(t[4],t.lineno(1), t.lexpos(1))
 
 def p_error(t):
     print(t)
@@ -598,18 +598,24 @@ def p_error(t):
 
 import Grammar.ply.yacc as yacc
 parser = yacc.yacc()
+globalEnv = None
 
-def startParser(text):
+def startParser(text,console):
     content = parser.parse(text)
     if text != '':
-        globalEnv = Enviroment(None)
+        global globalEnv
+        globalEnv = Enviroment(None,console)
         for instruction in content:
             if isinstance(instruction, Modulo) or isinstance(instruction, Struct) or isinstance(instruction, Function):
                 instruction.executeInstruction(globalEnv)
         founded = globalEnv.getFunction('main')
         if founded != None:
-            CallFunction('main',[]).executeInstruction(globalEnv)
+            CallFunction('main',[],0,0).executeInstruction(globalEnv)
         else:
             print("Error: No fué encontrada una función main")
             #except:
             #    print("Error: La instrucción no se puede ejecutar de forma global")
+
+def getGlobalEnv():
+    global globalEnv
+    return globalEnv

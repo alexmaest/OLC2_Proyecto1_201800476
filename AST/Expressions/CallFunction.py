@@ -5,11 +5,15 @@ from AST.Expressions.AttAccess import AttAccess
 from AST.Expressions.ParamReference import ParamReference
 from AST.Instructions.DeclarationSingle import DeclarationSingle
 from AST.Symbol.Enviroment import Enviroment
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 
 class CallFunction():
-    def __init__(self, id, parameters):
+    def __init__(self, id, parameters, row, column):
         self.id = id
         self.parameters = parameters
+        self.row = row
+        self.column = column
         self.newEnviroment = None 
         self.newFunction = None
         self.positions = []
@@ -23,10 +27,10 @@ class CallFunction():
         #Crear entorno
         if self.newEnviroment != None:
             founded = self.newFunction
-            newEnv = Enviroment(self.newEnviroment)
+            newEnv = Enviroment(self.newEnviroment,enviroment.console)
         else:
             founded = enviroment.getFunction(self.id)
-            newEnv = Enviroment(enviroment.getGlobal())
+            newEnv = Enviroment(enviroment.getGlobal(),enviroment.console)
         if founded != None or self.newEnviroment != None:
             #Ejecución de parametros
             if len(self.parameters) == len(founded.parameters):
@@ -46,40 +50,40 @@ class CallFunction():
                                         if param.reference:
                                             self.positions.append(count)
                                             singleValue = self.parameters[count].executeInstruction(enviroment)
-                                            singleParam = DeclarationSingle(param,Handler(singleValue.typeVar,singleValue.value,singleValue.typeSingle))   
+                                            singleParam = DeclarationSingle(param,Handler(singleValue.typeVar,singleValue.value,singleValue.typeSingle),self.row,self.column)   
                                             singleParam.executeInstruction(newEnv)          
                                             count+=1
                                         else:
                                             singleValue = self.parameters[count].executeInstruction(enviroment)
-                                            singleParam = DeclarationSingle(param,Handler(singleValue.typeVar,singleValue.value,singleValue.typeSingle))   
+                                            singleParam = DeclarationSingle(param,Handler(singleValue.typeVar,singleValue.value,singleValue.typeSingle),self.row,self.column)   
                                             singleParam.newEnv = newEnv
                                             singleParam.executeInstruction(enviroment)            
                                             count+=1
                                     else:
-                                        print("Error: Se esperaba una referencia diferente de la variable que ingresó como parametro")
+                                        listError.append(Error("Error: Se esperaba una referencia diferente de la variable que ingresó como parametro","Local",self.row,self.column,"SEMANTICO"))
                                         Fail = True
                                         break
                                 else:
                                     if not param.reference:
                                         singleValue = self.parameters[count].executeInstruction(enviroment)
-                                        singleParam = DeclarationSingle(param,Handler(singleValue.typeVar,singleValue.value,singleValue.typeSingle))   
+                                        singleParam = DeclarationSingle(param,Handler(singleValue.typeVar,singleValue.value,singleValue.typeSingle),self.row,self.column)   
                                         singleParam.newEnv = newEnv
                                         singleParam.executeInstruction(enviroment)             
                                         count+=1
                                     else:
-                                        print("Error: Se esperaba una referencia diferente de la variable que ingresó como parametro")
+                                        listError.append(Error("Error: Se esperaba una referencia diferente de la variable que ingresó como parametro","Local",self.row,self.column,"SEMANTICO"))
                                         Fail = True
                                         break
                             else:
-                                print("Error: La mutabilidad de la variable que ingresó como parametro es diferente a la declarada")
+                                listError.append(Error("Error: La mutabilidad de la variable que ingresó como parametro es diferente a la declarada","Local",self.row,self.column,"SEMANTICO"))
                                 Fail = True
                                 break
                         else:
-                            print("Error: La variable que ingresó como parametro no existe")
+                            listError.append(Error("Error: La variable que ingresó como parametro no existe","Local",self.row,self.column,"SEMANTICO"))
                             Fail = True
                             break
                     else:
-                        singleParam = DeclarationSingle(param,self.parameters[count])
+                        singleParam = DeclarationSingle(param,self.parameters[count],self.row,self.column)
                         singleParam.newEnv = newEnv
                         singleParam.executeInstruction(enviroment)             
                         count+=1
@@ -93,12 +97,12 @@ class CallFunction():
                             typeReturned = founded.type.executeInstruction(newEnv)
                             if typeReturned != None:
                                 return returnedValue
-                            else: print("Error: La función",founded.id,"no puede retornar un valor porque no tiene un tipo de valor declarado")
-                        else: print("Error: Una función no puede retornar una sentencia break sin expresión o continue")
+                            else: listError.append(Error("Error: La función "+str(founded.id)+"no puede retornar un valor porque no tiene un tipo de valor declarado","Local",self.row,self.column,"SEMANTICO"))
+                        else: listError.append(Error("Error: Una función no puede retornar una sentencia break sin expresión o continue","Local",self.row,self.column,"SEMANTICO"))
                     elif returnedValue != None and founded.type == None:
-                        print("Error: No puede retornar valores en la función",self.id,"tipo void")
+                        listError.append(Error("Error: No puede retornar valores en la función "+str(self.id)+" tipo void","Local",self.row,self.column,"SEMANTICO"))
                     elif returnedValue == None and founded.type != None:
-                        print("Error: Debe de retonar algún valor en esta función")
+                        listError.append(Error("Error: Debe de retonar algún valor en esta función","Local",self.row,self.column,"SEMANTICO"))
                     else: pass #ya se validó todo
 
                 #Modificar de regreso las variables que se enviaron con referencia
@@ -106,11 +110,10 @@ class CallFunction():
                         returned = founded.statement.newEnv.getVariable(founded.parameters[number].id)
                         if returned != None:
                             if isinstance(self.parameters[number], AttAccess):
-                                print(returned.value)
                                 exist = enviroment.editVariable(self.parameters[number].id, returned.value)
                             else:
                                 exist = enviroment.editVariable(self.parameters[number].id.id, returned.value)
             else:
-                print("Error: El número de parametros que ingresó para la función",self.id,"no son los correctos")
+                listError.append(Error("Error: El número de parametros que ingresó para la función "+str(self.id)+"no son los correctos","Local",self.row,self.column,"SEMANTICO"))
         else:
-            print("Error: No se pudo encontrar la función con id", self.id)
+            listError.append(Error("Error: No se pudo encontrar la función con id "+str(self.id),"Local",self.row,self.column,"SEMANTICO"))

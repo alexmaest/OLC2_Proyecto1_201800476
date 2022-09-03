@@ -7,7 +7,7 @@ class Statement(Instruccion):
         self.newEnv = None
 
     def executeInstruction(self, enviroment):
-        self.newEnv = Enviroment(enviroment)
+        self.newEnv = Enviroment(enviroment,enviroment.console)
         for line in self.instructions:
             instruction = line.executeInstruction(self.newEnv)
             if instruction != None:

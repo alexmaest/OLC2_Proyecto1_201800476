@@ -1,12 +1,16 @@
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
 from AST.Abstracts.Instruccion import Instruccion
 from AST.Symbol.Symbol import Symbol
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 
 class Cast(Instruccion):
 
-    def __init__(self, exp, type):
+    def __init__(self, exp, type, row, column):
         self.exp = exp
         self.type = type
+        self.row = row
+        self.column = column
 
     CASTING = [
         [TYPE_DECLARATION.INTEGER, TYPE_DECLARATION.FLOAT, TYPE_DECLARATION.NULL, TYPE_DECLARATION.NULL, TYPE_DECLARATION.NULL, TYPE_DECLARATION.CHAR, TYPE_DECLARATION.USIZE],
@@ -58,6 +62,6 @@ class Cast(Instruccion):
                     #TYPE_DECLARATION.CHAR and TYPE_DECLARATION.CHAR:
                     return Retorno(returned, singleExp.value,singleExp.typeSingle)
             else:
-                print("Error: No se puede realizar un casteo entre",singleExp.typeVar,"y",singleType.typeVar)
+                listError.append(Error("Error: No se puede realizar un casteo entre "+str(singleExp.typeVar)+" y "+str(singleType.typeVar),"Local",self.row,self.column,"SEMANTICO"))
         else:
-            print("Error: El casteo no ha podido ser realizado")
+            listError.append(Error("Error: El casteo no ha podido ser realizado","Local",self.row,self.column,"SEMANTICO"))

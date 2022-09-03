@@ -1,10 +1,14 @@
 from AST.Abstracts.Instruccion import Instruccion
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 
 class While(Instruccion):
-    def __init__(self, condition, statement):
+    def __init__(self, condition, statement, row, column):
         self.condition = condition
         self.statement = statement
+        self.row = row
+        self.column = column
 
     def executeInstruction(self, enviroment):
         condition = self.condition.executeInstruction(enviroment)
@@ -22,8 +26,8 @@ class While(Instruccion):
                             return returned
                     condition = self.condition.executeInstruction(enviroment)
                     if condition.typeVar != TYPE_DECLARATION.BOOLEAN:
-                        print("Error: La condición no es un booleano")
+                        listError.append(Error("Error: La condición no es un booleano","Local",self.row,self.column,"SEMANTICO"))
             else:
-                print("Error: La condición no es un booleano")
+                listError.append(Error("Error: La condición no es un booleano","Local",self.row,self.column,"SEMANTICO"))
         else:
-            print("Error: No se ha podido ejecutar la sentencia While")
+            listError.append(Error("Error: No se ha podido ejecutar la sentencia While","Local",self.row,self.column,"SEMANTICO"))

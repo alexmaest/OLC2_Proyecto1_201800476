@@ -1,6 +1,7 @@
 from AST.Abstracts.Expression import Expression
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
-
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 from enum import Enum
 
 class TYPE_NATIVE(Enum):
@@ -22,9 +23,11 @@ class TYPE_NATIVE(Enum):
     WITH_CAPACITY = 13
 
 class CallNative():
-    def __init__(self, exp, type):
+    def __init__(self, exp, type, row, column):
         self.exp = exp
         self.type = type
+        self.row = row
+        self.column = column
 
     def executeInstruction(self,enviroment):
         returnedValue = None
@@ -39,7 +42,7 @@ class CallNative():
                 returnedValue.append(self.exp[0])
                 returnedValue.append(self.exp[1])
             else:
-                print("Error: Solo se aceptan 2 parametros en la función insert()")
+                listError.append(Error("Error: Solo se aceptan 2 parametros en la función insert()","Local",self.row,self.column,"SEMANTICO"))
                 return None
         
         if self.type == 0:

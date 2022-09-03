@@ -2,12 +2,16 @@ from AST.Abstracts.Instruccion import Instruccion
 from AST.Abstracts.Retorno import Retorno, TYPE_DECLARATION
 from AST.Expressions.Arithmetic import TYPE_OPERATION
 from AST.Instructions.AssignmentAccessArray import AssignmentAccessArray
+from AST.Error.Error import Error
+from AST.Error.ErrorList import listError
 
 class Assignment(Instruccion):
 
-    def __init__(self,idList,expression):
+    def __init__(self,idList,expression, row, column):
         self.idList = idList
         self.expression = expression
+        self.row = row
+        self.column = column
     
     def executeInstruction(self, enviroment):
         exp = self.expression.executeInstruction(enviroment)
@@ -22,7 +26,7 @@ class Assignment(Instruccion):
                             if singleId.typeSingle == TYPE_DECLARATION.VECTOR:
                                 enviroment.editVariable(self.idList[0].id.id, exp.value)
                             else: 
-                                print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
+                                listError.append(Error("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable","Local",self.row,self.column,"SEMANTICO"))
                         else:
                             if singleId.typeSingle == exp.typeSingle:
 
@@ -33,9 +37,9 @@ class Assignment(Instruccion):
                                 elif singleId.typeVar == TYPE_DECLARATION.USIZE and exp.typeVar == TYPE_DECLARATION.INTEGER:
                                         enviroment.editVariable(self.idList[0].id.id, exp.value)
                                 else: 
-                                    print("Error: No se puede asignar un valor",exp.typeVar,"a una variable tipo",singleId.typeVar)
+                                    listError.append(Error("Error: No se puede asignar un valor "+str(exp.typeVar)+" a una variable tipo "+str(singleId.typeVar),"Local",self.row,self.column,"SEMANTICO"))
                             else: 
-                                print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
+                                listError.append(Error("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable","Local",self.row,self.column,"SEMANTICO"))
 
                     else:
                         #Se buscan atributos de structs
@@ -49,9 +53,9 @@ class Assignment(Instruccion):
                                         newValue.append(exp.value)
                                         founded.value = newValue
                                     else: 
-                                        print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
+                                        listError.append(Error("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable","Local",self.row,self.column,"SEMANTICO"))
                                 else: 
-                                    print("Error: No se puede asignar un valor",exp.typeVar,"a un atributo tipo",founded.typeVar)
+                                    listError.append(Error("Error: No se puede asignar un valor "+str(exp.typeVar)+" a un atributo tipo "+str(founded.typeVar),"Local",self.row,self.column,"SEMANTICO"))
                         elif isinstance(self.idList[0],AssignmentAccessArray):
                             founded = self.foundAttribute(exist, self.idList, 1)
                             if founded != None:
@@ -62,15 +66,15 @@ class Assignment(Instruccion):
                                         newValue.append(exp.value)
                                         founded.value = newValue
                                     else: 
-                                        print("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable")
+                                        listError.append(Error("Error: No se puede asignar un valor de diferentes dimensiones a las de la variable","Local",self.row,self.column,"SEMANTICO"))
                                 else: 
-                                    print("Error: No se puede asignar un valor",exp.typeVar,"a un atributo tipo",founded.typeVar)
+                                    listError.append(Error("Error: No se puede asignar un valor "+str(exp.typeVar)+" a un atributo tipo "+str(founded.typeVar),"Local",self.row,self.column,"SEMANTICO"))
                         else:
-                            print("Error: La variable",self.idList[0].id.id,"no es un struct para que acceda a sus atributos")
+                            listError.append(Error("Error: La variable "+str(self.idList[0].id.id)+" no es un struct para que acceda a sus atributos","Local",self.row,self.column,"SEMANTICO"))
                 else:
-                    print("Error: La variable no es mutable")
+                    listError.append(Error("Error: La variable no es mutable","Local",self.row,self.column,"SEMANTICO"))
             else:
-                print("Error: La variable aún no ha sido declarada")
+                listError.append(Error("Error: La variable aún no ha sido declarada","Local",self.row,self.column,"SEMANTICO"))
 
     def foundAttribute(self, variable, list, number):
         if list[number].id in variable.value:
@@ -79,5 +83,5 @@ class Assignment(Instruccion):
             else:
                 return self.foundAttribute(variable.value[list[number].id], list, number+1)
         else:
-            print("Error: Atributo",list[number].id,"no encontrado de la variable",list[0].id.id) 
+            listError.append(Error("Error: Atributo "+str(list[number].id)+" no encontrado de la variable "+str(list[0].id.id),"Local",self.row,self.column,"SEMANTICO"))
             return None
